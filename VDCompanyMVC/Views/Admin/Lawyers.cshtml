@@ -1,0 +1,109 @@
+﻿@{ Layout = "_LayoutAdmin";}
+@model VDCompanyMVC.Models.Pages.ModelAdminLawyers;
+<div class="content content-fixed">
+    <div class="container pd-x-0 pd-lg-x-10 pd-xl-x-0">
+        <div class="d-sm-flex align-items-center justify-content-between mg-b-20 mg-lg-b-25 mg-xl-b-30">
+            <div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb breadcrumb-style1 mg-b-10">
+                        <li class="breadcrumb-item"><a href="#">Главная страница</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Юристы</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="d-none d-md-block">
+                <button class="btn btn-primary btn-sm pd-x-15" onclick="newlawyer()">Добавить нового юриста</button>
+            </div>
+        </div>
+
+        <h4 class="mg-b-0 tx-spacing--1">Таблица всех юристов</h4>
+        <div class="row row-xs">
+            <div class="col-lg">
+                <div class=" ht-100p d-flex flex-column justify-content-between align-items-center">
+                    <div class="table-responsive">
+                        <table class="table table-primary table-hover table-striped text-center mg-b-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">ФИО</th>
+                                    <th scope="col">Login</th>
+                                    <th scope="col">Password</th>
+                                    <th scope="col">Действия</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Lawyers)
+                                {
+                                    <tr>
+                                        <th scope="row">@item.Id</th>
+                                        <td>@item.FIO</td>
+                                        <td>@item.Login</td>
+                                        <td>@item.Password</td>
+                                        <td>
+                                            <div class="btn-group w-100" role="group">
+                                                <button type="button" class="btn btn-outline-primary" onclick="editlawyer(@item.Id)">Редакт.</button>
+                                                <button type="button" class="btn btn-outline-danger" onclick="Remove_Lawyer(@item.Id)">Удалить</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- container -->
+</div><!-- content -->
+
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content tx-14">
+            <div class="modal-header">
+                <h6 class="modal-title" id="ModalLabel">Добавление юриста</h6>
+                <button type="button" class="close" onclick="closemodal()">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="form-group">
+                    <label for="fio">ФИО</label>
+                    <input type="text" class="form-control" id="fio">
+                    <small id="fioHelp" class="form-text text-muted">Будет отображаться для клиентов</small>
+                </div>
+                <div class="form-group">
+                    <label for="log">Login</label>
+                    <input type="text" class="form-control" id="log">
+                    <small id="loginHelp" class="form-text text-muted">Логин для входа в кабинет</small>
+                </div>
+                <div class="form-group">
+                    <label for="psw">Password</label>
+                    <input type="text" class="form-control" id="psw">
+                    <small id="pswHelp" class="form-text text-muted">Пароль для входа в кабинет</small>
+                </div>
+
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button id="newlawyer" type="button" class="btn btn-primary tx-13" onclick="New_Lawyer()">Добавить</button>
+                <button id="editlawyer" type="button" class="btn btn-primary tx-13" onclick="Edit_Lawyer()">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/spaceuser/lib/jquery/jquery.min.js"></script>
+<script src="~/spaceuser/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="~/spaceuser/lib/feather-icons/feather.min.js"></script>
+<script src="~/spaceuser/lib/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+<script src="~/spaceuser/lib/jquery.flot/jquery.flot.js"></script>
+<script src="~/spaceuser/lib/jquery.flot/jquery.flot.stack.js"></script>
+<script src="~/spaceuser/lib/jquery.flot/jquery.flot.resize.js"></script>
+<script src="~/spaceuser/lib/chart.js/Chart.bundle.min.js"></script>
+<script src="~/spaceuser/lib/jqvmap/jquery.vmap.min.js"></script>
+<script src="~/spaceuser/lib/jqvmap/maps/jquery.vmap.usa.js"></script>
+<script src="~/spaceuser/assets/js/dashforge.chat.js"></script>
+<script src="~/spaceuser/assets/js/signalr.min.js"></script>
+<script src="~/spaceuser/assets/js/jquerry.cookie.js"></script>
+<script src="~/spaceuser/assets/js/main.js"></script>
+<script src="~/spaceadmin/assets/js/main.js"></script>

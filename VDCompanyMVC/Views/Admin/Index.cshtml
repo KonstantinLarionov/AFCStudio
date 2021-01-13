@@ -1,0 +1,476 @@
+﻿@{ Layout = "_LayoutAdmin"; }
+@model VDCompanyMVC.Models.DTO.IndexDTO
+ <!--MAINPAGE-->
+<div class="content content-fixed">
+    <div class="container pd-x-0 pd-lg-x-10 pd-xl-x-0">
+        <div class="d-sm-flex align-items-center justify-content-between mg-b-20 mg-lg-b-25 mg-xl-b-30">
+            <div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb breadcrumb-style1 mg-b-10">
+                        <li class="breadcrumb-item"><a href="#">Кабинет администратора</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Общая статистика</li>
+                    </ol>
+                </nav>
+                <h4 class="mg-b-0 tx-spacing--1">Все пользователи</h4>
+            </div>
+            <div class="d-none d-md-block">
+                <a href="/Admin/Lawyers" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5">
+                    <i data-feather="file"
+                       class="wd-10 mg-r-5"></i> Посмотреть юристов
+                </a>
+            </div>
+        </div>
+
+        <div class="row row-xs">
+            <div class="col-sm-6 col-lg-3">
+                <div class="card card-body">
+                    <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Успешные дела</h6>
+                    <div class="d-flex d-lg-block d-xl-flex align-items-end">
+                        <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1" id="percent_case">@Model.PersentUpCases</h3>
+                        <p class="tx-11 tx-color-03 mg-b-0">
+                            <span class="tx-medium tx-success">
+                                <i class="icon ion-md-arrow-up"></i>
+                            </span> за последнюю неделю
+                        </p>
+                    </div>
+                    <div class="chart-three">
+                        <div id="flotChart3" class="flot-chart ht-30"></div>
+                    </div><!-- chart-three -->
+                </div>
+            </div><!-- col -->
+            <div class="col-sm-6 col-lg-3 mg-t-10 mg-sm-t-0">
+                <div class="card card-body">
+                    <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Уникальных пользователей</h6>
+                    <div class="d-flex d-lg-block d-xl-flex align-items-end">
+                        <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1">@Model.CountUsers</h3>
+                        <p class="tx-11 tx-color-03 mg-b-0">
+                            <span class="tx-medium tx-success">
+                                <i class="icon ion-md-arrow-up"></i>
+                            </span> за последнюю неделю
+                        </p>
+                    </div>
+                    <div class="chart-three">
+                        <div id="flotChart4" class="flot-chart ht-30"></div>
+                    </div><!-- chart-three -->
+                </div>
+            </div><!-- col -->
+            <div class="col-sm-6 col-lg-3 mg-t-10 mg-lg-t-0">
+                <div class="card card-body">
+                    <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Всего дел</h6>
+                    <div class="d-flex d-lg-block d-xl-flex align-items-end">
+                        <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1" id="count_case">@Model.CountCases</h3>
+                        <p class="tx-11 tx-color-03 mg-b-0">
+                            <span class="tx-medium tx-success">
+                                <i class="icon ion-md-arrow-up"></i>
+                            </span> за последнюю неделю
+                        </p>
+                    </div>
+                    <div class="chart-three">
+                        <div id="flotChart5" class="flot-chart ht-30"></div>
+                    </div><!-- chart-three -->
+                </div>
+            </div><!-- col -->
+            <div class="col-sm-6 col-lg-3 mg-t-10 mg-lg-t-0">
+                <div class="card card-body">
+                    <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Положительных отзывов</h6>
+                    <div class="d-flex d-lg-block d-xl-flex align-items-end">
+                        <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1" id="count_feed">@Model.GoodFeedBack</h3>
+                        <p class="tx-11 tx-color-03 mg-b-0">
+                            <span class="tx-medium tx-success">
+                                <i class="icon ion-md-arrow-up"></i>
+                            </span> за последнюю неделю
+                        </p>
+                    </div>
+                    <div class="chart-three">
+                        <div id="flotChart6" class="flot-chart ht-30"></div>
+                    </div><!-- chart-three -->
+                </div>
+            </div><!-- col -->
+        </div><!-- row -->
+        <div class="space1row"></div>
+        <h4 class="mg-b-0 tx-spacing--1">Таблица последних пользователей</h4>
+        <div class="row row-xs">
+            <div class="col-lg">
+                <div class=" ht-100p d-flex flex-column justify-content-between align-items-center">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-primary table-hover table-striped mg-b-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Имя/Ник</th>
+                                    <th scope="col">Дата регистрации</th>
+                                    <th scope="col">Активных дел</th>
+                                    <th scope="col">Почта</th>
+                                    <th scope="col">Действия</th>
+
+                                </tr>
+                            </thead>
+                            <tbody id="userTable">
+                                @if (Model.Users.Count != 0)
+                                {
+                                    @for (int i = 0; i < Model.Users.Count; i++)
+                                    {
+                                        <tr>
+                                            <th style="vertical-align:middle;" scope="row">@Model.Users[i].Id</th>
+                                            <td style="vertical-align:middle;">@Model.Users[i].Name</td>
+                                            <td style="vertical-align:middle;">@Model.Users[i].DateReg</td>
+                                            <td style="vertical-align:middle;">@Model.Users[i].Cases.Count</td>
+                                            <td style="vertical-align:middle;">@Model.Users[i].Email</td>
+                                            <Td style="vertical-align:middle;">
+                                                <div style="display: flex;">
+                                                    <a class="btn btn-info btn-sm m-1" href='#modal_@Model.Users[i].Id' onclick="ShowModal('modal_@Model.Users[i].Id')" data-toggle="modal">Выставить счет</a>
+                                                    <a class="btn btn-primary btn-sm m-1" href='#'>Дела</a>
+                                                    <a class="btn btn-danger btn-sm m-1" href='#'>ЧС</a>
+                                                </div>
+                                            </Td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                        <!--<nav aria-label="Page navigation example">
+                          <ul class="pagination mg-b-0">
+                            <li class="page-item disabled"><a class="page-link page-link-icon" href="#"><i
+                                  data-feather="chevron-left"></i></a></li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link page-link-icon" href="#"><i
+                                  data-feather="chevron-right"></i></a></li>
+                          </ul>
+                        </nav>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="space1row"></div>
+        <h4 class="mg-b-0 tx-spacing--1">Таблица последних дел</h4>
+        <div class="row row-xs">
+            <div class="col-lg">
+                <div class=" ht-100p d-flex flex-column justify-content-between align-items-center">
+                    <div class="table-responsive">
+                        <table class="table table-primary table-hover table-striped mg-b-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Название</th>
+                                    <th scope="col">Тип дела</th>
+                                    <th scope="col">Дата старта</th>
+                                    <th scope="col">Юрист</th>
+                                    <th scope="col">Статус</th>
+                                    <th scope="col">Действия</th>
+                                </tr>
+                            </thead>
+                            <tbody id="caseTable">
+                                @if (Model.Cases.Count != 0)
+                                {
+
+
+                                @for (int i = 0; i < Model.Cases.Count; i++)
+                                {
+                                    <tr>
+                                        <th style="vertical-align:middle;" scope="row">@Model.Cases[i].Id</th>
+                                        <td style="vertical-align:middle;">@Model.Cases[i].Name</td>
+                                        <td style="vertical-align:middle;">@Model.Cases[i].Type</td>
+                                        <td style="vertical-align:middle;">@Model.Cases[i].DateStart</td>
+                                        <td style="vertical-align:middle;"></td>
+                                        <td style="vertical-align:middle;">
+                                            @switch (@Model.Cases[i].Status)
+                                            {
+                                                case VDCompanyMVC.Models.Objects.TypeCase.Close:
+                                                    var str = "Закрыто";
+                                                    @str;
+                                                    break;
+                                                case VDCompanyMVC.Models.Objects.TypeCase.Open:
+                                                    var str2 = "Открыто";
+                                                    @str2;
+                                                    break;
+                                                case VDCompanyMVC.Models.Objects.TypeCase.InProcess:
+                                                    var str3 = "В процессе";
+                                                    @str3;
+                                                    break;
+                                                default:
+                                                    break;
+                                            }
+                                        </td>
+                                        <Td style="vertical-align:middle;">
+                                            <div style="display:flex;">
+                                                <button type="button" class="btn btn-sm btn-primary m-1">Посмотреть</button>
+                                                <a href="#modal_case_@Model.Cases[i].Id" data-toggle="modal" data-animation="effect-flip-horizontal" type="button" class="btn btn-sm btn-info m-1">Назначить</a>
+                                            </div>
+                                        </Td>
+                                    </tr>
+                                }
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- container -->
+</div><!-- content -->
+@if (Model.Users.Count != 0)
+{
+
+
+@for (int i = 0; i < Model.Users.Count; i++)
+{
+
+    <div class="modal fade" id="modal_@Model.Users[i].Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel_@Model.Users[i].Id"
+         style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content tx-14">
+                <div class="modal-header">
+                    <h6 class="modal-title" id="exampleModalLabel_@Model.Users[i].Id">Выставить счет</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form action="/Admin/SetBill" method="post">
+                    <input type="hidden" name="iduser" value="@Model.Users[i].Id">
+                    <div class="modal-body">
+                        <table class="table table-dark table-hover table-striped mg-b-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Название</th>
+                                    <th scope="col">Значение</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Наименование дела</td>
+                                    <td><input type="text" name="nameCase" class="form-control" placeholder="Input box"></td>
+                                </tr>
+                                <tr>
+                                    <td>Дата выставления</td>
+                                    <td><input type="date" name="datePut" class="form-control"></td>
+                                </tr>
+                                <tr>
+                                    <td>Конечная дата оплаты</td>
+                                    <td><input type="date" name="dateEnd" class="form-control"></td>
+                                </tr>
+                                <tr>
+                                    <td>Кем выставлен</td>
+                                    <td><input type="text" name="whoPut" class="form-control" placeholder="Input box"></td>
+                                </tr>
+                                <tr>
+                                    <td>Кому выставлен</td>
+                                    <td><input type="text" name="whoTake" class="form-control" placeholder="Input box"></td>
+                                </tr>
+                                <tr>
+                                    <td>Сумма счета</td>
+                                    <td><input type="text" name="sum" class="form-control" placeholder="Input box"></td>
+                                </tr>
+                                <tr>
+                                    <td>Дополнительные расходы</td>
+                                    <td><input type="text" name="dopSum" class="form-control" placeholder="Input box"></td>
+                                </tr>
+                                <tr>
+                                    <td>Итого </td>
+                                    <td><input type="text" name="itogo" class="form-control" placeholder="Input box"></td>
+                                </tr>
+                                <tr>
+                                    <td>Реквизит оплаты </td>
+                                    <td><input type="text" name="requisit" class="form-control" placeholder="Input box"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary tx-13">Выставить</button>
+                        <button type="button" class="btn btn-sm tx-13" data-dismiss="modal">Закрыть</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+}
+
+@if (Model.Cases.Count != 0)
+{
+
+
+@for (int j = 0; j < Model.Cases.Count; j++)
+{
+    <div class="modal fade" id="modal_case_@Model.Cases[j].Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel_case_@Model.Cases[j].Id"
+         style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content tx-14">
+                <div class="modal-header">
+                    <h6 class="modal-title" id="exampleModalLabel_case_@Model.Cases[j].Id">Выставить счет</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form action="/Admin/SetLaw" method="post">
+                    <input type="hidden" value="@Model.Cases[j].Id" name="idcase" />
+                    <div class="modal-body">
+                        <table class="table table-dark table-hover table-striped mg-b-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Название</th>
+                                    <th scope="col">Значение</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Адвокат 1</td>
+                                    <td>
+
+                                        <select class="custom-select" name="law1">
+                                            @if (Model.Lawyers.Count != 0)
+                                            {
+
+
+                                                @for (int i = 0; i < Model.Lawyers.Count; i++)
+                                                {
+                                                    @if (i == 0)
+                                                    {
+
+
+                                                        <option selected value="-1">Выберите Адвоката</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@Model.Lawyers[i].Id">@Model.Lawyers[i].Login</option>
+
+                                                    }
+                                                }
+                                            }
+                                        </select>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Адвокат 2</td>
+                                    <td>
+
+                                        <select class="custom-select" name="law2">
+
+                                            @if (Model.Lawyers.Count != 0)
+                                            {
+
+                                                @for (int i = 0; i < Model.Lawyers.Count; i++)
+                                                {
+                                                    @if (i == 0)
+                                                    {
+
+
+                                                        <option selected value="-1">Выберите Адвоката</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@Model.Lawyers[i].Id">@Model.Lawyers[i].Login</option>
+
+                                                    }
+                                                }
+                                            }
+                                        </select>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Адвокат 3</td>
+                                    <td>
+
+
+                                        <select class="custom-select" name="law3">
+                                            @if (Model.Lawyers.Count != 0)
+                                            {
+
+                                                @for (int i = 0; i < Model.Lawyers.Count; i++)
+                                                {
+                                                    @if (i == 0)
+                                                    {
+
+                                                        <option selected value="-1">Выберите Адвоката</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@Model.Lawyers[i].Id">@Model.Lawyers[i].Login</option>
+
+                                                    }
+                                                }
+                                            }
+                                        </select>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Адвокат 4</td>
+                                    <td>
+
+
+                                        <select class="custom-select" name="law4">
+                                            @if (Model.Lawyers.Count != 0)
+                                            {
+
+                                                @for (int i = 0; i < Model.Lawyers.Count; i++)
+                                                {
+                                                    @if (i == 0)
+                                                    {
+
+                                                        <option selected value="-1">Выберите Адвоката</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@Model.Lawyers[i].Id">@Model.Lawyers[i].Login</option>
+
+                                                    }
+                                                }
+                                            }
+                                        </select>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Адвокат 5</td>
+                                    <td>
+
+
+                                        <select class="custom-select" name="law5">
+                                            @if (Model.Lawyers.Count != 0)
+                                            {
+
+                                                @for (int i = 0; i < Model.Lawyers.Count; i++)
+                                                {
+                                                    @if (i == 0)
+                                                    {
+
+
+                                                        <option selected value="-1">Выберите Адвоката</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@Model.Lawyers[i].Id">@Model.Lawyers[i].Login</option>
+
+                                                    }
+                                                }
+                                            }
+                                        </select>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-sm tx-13" data-dismiss="modal">Закрыть</button>
+                        <button type="submit" class="btn btn-primary tx-13">Сохранить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+}
+<script>
+    function ShowModal(modalId)
+    {
+        var modal = document.getElementById(modalId);
+        modal.style.display = "block";
+    }
+</script>
