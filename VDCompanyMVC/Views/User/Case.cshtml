@@ -6,8 +6,8 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb breadcrumb-style1 mg-b-10">
                     <li class="breadcrumb-item"><a href="#">Личный кабинет</a></li>
-                    <li class="breadcrumb-item"><a href="#">Мои дела</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Просмотр дела</li>
+                    <li class="breadcrumb-item"><a href="#">Мои услуги</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Просмотр услуги</li>
                 </ol>
             </nav>
             <h4 class="mg-b-0 tx-spacing--1">@Model.Case.Type от @Model.Case.DateStart</h4>
@@ -43,10 +43,10 @@
                     <h6 id="channelTitle" class="mg-b-0">@Model.Case.Name</h6>
                     <div class="d-flex">
                         <nav id="channelNav">
-                            <a href="#" id="buttonmembers" title="Участники дела (Показать/Скрыть)">
+                            <a href="#" id="buttonmembers" title="Участники услуги (Показать/Скрыть)">
                                 <i class="fa fa-users fa-2x" aria-hidden="true"></i>
                             </a>
-                            <a href="#" id="buttondocs" title="Документы дела">
+                            <a href="#" id="buttondocs" title="Документы услуги">
                                 <i class="fa fa-copy fa-2x" aria-hidden="true"></i>
                             </a>
                         </nav>
@@ -270,7 +270,7 @@
                         var myform = new FormData();
 /* Функция иммитации нажатия на fileinput для выбора нового изображения */
 function addimage(elem){
-    $(elem).children()[0].click(); // делаем клик по инпут-файлу
+    $(elem).children()[0].click(); // услугием клик по инпут-файлу
 }
 $('#files').on('change', function(){ // находим в элементе инпут-файл
     $('#addingfiles').empty();

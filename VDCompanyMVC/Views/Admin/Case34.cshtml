@@ -7,8 +7,8 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb breadcrumb-style1 mg-b-10">
                         <li class="breadcrumb-item"><a href="#">Личный кабинет</a></li>
-                        <li class="breadcrumb-item"><a href="#">Мои дела</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Просмотр дела</li>
+                        <li class="breadcrumb-item"><a href="#">Мои услуги</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Просмотр услуги</li>
                     </ol>
                 </nav>
                 <h4 class="mg-b-0 tx-spacing--1">@Model.Case.Type от @Model.Case.DateStart</h4>
@@ -53,7 +53,7 @@
                                 <div class="avatar avatar-sm mg-r-8">
                                     <span class="avatar-initial rounded-circle">VD</span>
                                 </div>
-                                <span class="tx-color-01 tx-semibold">Все участники дела</span>
+                                <span class="tx-color-01 tx-semibold">Все участники услуги</span>
                             </div>
                         </a>
 
@@ -206,7 +206,7 @@
                     <div class="chat-sidebar-right ps" id="rightPanel">
                         <div class="pd-y-20 pd-x-10">
                             <div class="tx-10 tx-uppercase tx-medium tx-color-03 tx-sans tx-spacing-1 pd-l-10">
-                                Ваш юрист
+                                Ваш менеджер
                             </div>
                             <div class="chat-member-list">
                                 <a href="#" class="media">
@@ -228,7 +228,7 @@
                         </div>
                         <div class="pd-y-20 pd-x-10">
                             <div class="tx-10 tx-uppercase tx-medium tx-color-03 tx-sans tx-spacing-1 pd-l-10">
-                                Документы дела
+                                Документы услуги
                             </div>
                             <div class="chat-member-list">
                                 @for (int i = 0; Model.Case.Docs.Count != null && i < Model.Case.Docs.Count; i++)

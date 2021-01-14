@@ -30,7 +30,7 @@ namespace VDCompanyMVC.Hubs
             {
                 var user = userRes.Item1;
                 var userCase = database.Cases.Where(@case => @case.Id == idCase).Include(d => d.Dialog.Messages).Include(h => h.ClientsHub).FirstOrDefault();
-                //Наличие дела у пользователя
+                //Наличие услуги у пользователя
                 if (userCase != null)
                 {
                     //Если подключенного пользователя нет в списке пиров по делу добавляем его в список
@@ -55,7 +55,7 @@ namespace VDCompanyMVC.Hubs
             {
                 var admin = adminRes.Item1;
                 var adminCase = database.Cases.Where(@case => @case.Id == idCase).Include(d => d.Dialog.Messages).Include(h => h.ClientsHub).FirstOrDefault();
-                //Наличие дела у пользователя
+                //Наличие услуги у пользователя
                 if (adminCase != null)
                 {
                     //Если подключенного пользователя нет в списке пиров по делу добавляем его в список
@@ -80,7 +80,7 @@ namespace VDCompanyMVC.Hubs
             {
                 var lawyer = lawyerRes.Item1;
                 var lawyerCase = database.Cases.Where(@case => @case.Id == idCase).Include(d => d.Dialog.Messages).Include(h => h.ClientsHub).FirstOrDefault();
-                //Наличие дела у пользователя
+                //Наличие услуги у пользователя
                 if (lawyerCase != null)
                 {
                     //Если подключенного пользователя нет в списке пиров по делу добавляем его в список

@@ -239,8 +239,8 @@ namespace VDCompany.Controllers
             }
             try
             {
-                Mailler.SendEmailAsync(userinfo.login, "VDCOMPANY", "Создание нового дела",
-                    $"Вы создали новое дело на сервисе VDCOMPANY! <br><br> Наименование вашего дела: {new_case.Name} <br> Тип вашего дела: {new_case.Type} <br> Дата создания: {new_case.DateStart} <br><br> После регистрации, дело появится в вашем личном кабинете в списке дел и вам будет назначен подходящий специалист.<br><br> <span style=\"color:red;\">По всем вопросам: companyvd@yandex.ru</span>").GetAwaiter().GetResult();
+                Mailler.SendEmailAsync(userinfo.login, "VDCOMPANY", "Создание нового услуги",
+                    $"Вы заказали новую услугу на сервисе VDCOMPANY! <br><br> Наименование вашего услуги: {new_case.Name} <br> Тип вашего услуги: {new_case.Type} <br> Дата создания: {new_case.DateStart} <br><br> После регистрации, дело появится в вашем личном кабинете в списке дел и вам будет назначен подходящий специалист.<br><br> <span style=\"color:red;\">По всем вопросам: companyvd@yandex.ru</span>").GetAwaiter().GetResult();
             }
             catch 
             {

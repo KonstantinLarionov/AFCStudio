@@ -16,7 +16,7 @@
             <div class="d-none d-md-block">
                 <a href="/Admin/Lawyers" class="btn btn-sm pd-x-15 btn-primary btn-uppercase mg-l-5">
                     <i data-feather="file"
-                       class="wd-10 mg-r-5"></i> Посмотреть юристов
+                       class="wd-10 mg-r-5"></i> Посмотреть менеджеров
                 </a>
             </div>
         </div>
@@ -24,7 +24,7 @@
         <div class="row row-xs">
             <div class="col-sm-6 col-lg-3">
                 <div class="card card-body">
-                    <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Успешные дела</h6>
+                    <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Успешные услуги</h6>
                     <div class="d-flex d-lg-block d-xl-flex align-items-end">
                         <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1" id="percent_case">@Model.PersentUpCases</h3>
                         <p class="tx-11 tx-color-03 mg-b-0">
@@ -56,7 +56,7 @@
             </div><!-- col -->
             <div class="col-sm-6 col-lg-3 mg-t-10 mg-lg-t-0">
                 <div class="card card-body">
-                    <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">Всего дел</h6>
+                    <h6 class="tx-uppercase tx-11 tx-spacing-1 tx-color-02 tx-semibold mg-b-8">всего услуг</h6>
                     <div class="d-flex d-lg-block d-xl-flex align-items-end">
                         <h3 class="tx-normal tx-rubik mg-b-0 mg-r-5 lh-1" id="count_case">@Model.CountCases</h3>
                         <p class="tx-11 tx-color-03 mg-b-0">
@@ -99,7 +99,7 @@
                                     <th scope="col">ID</th>
                                     <th scope="col">Имя/Ник</th>
                                     <th scope="col">Дата регистрации</th>
-                                    <th scope="col">Активных дел</th>
+                                    <th scope="col">активных услуг</th>
                                     <th scope="col">Почта</th>
                                     <th scope="col">Действия</th>
 
@@ -119,7 +119,7 @@
                                             <Td style="vertical-align:middle;">
                                                 <div style="display: flex;">
                                                     <a class="btn btn-info btn-sm m-1" href='#modal_@Model.Users[i].Id' onclick="ShowModal('modal_@Model.Users[i].Id')" data-toggle="modal">Выставить счет</a>
-                                                    <a class="btn btn-primary btn-sm m-1" href='#'>Дела</a>
+                                                    <a class="btn btn-primary btn-sm m-1" href='#'>услуги</a>
                                                     <a class="btn btn-danger btn-sm m-1" href='#'>ЧС</a>
                                                 </div>
                                             </Td>
@@ -144,7 +144,7 @@
             </div>
         </div>
         <div class="space1row"></div>
-        <h4 class="mg-b-0 tx-spacing--1">Таблица последних дел</h4>
+        <h4 class="mg-b-0 tx-spacing--1">Таблица последних услуг</h4>
         <div class="row row-xs">
             <div class="col-lg">
                 <div class=" ht-100p d-flex flex-column justify-content-between align-items-center">
@@ -154,9 +154,9 @@
                                 <tr>
                                     <th scope="col">ID</th>
                                     <th scope="col">Название</th>
-                                    <th scope="col">Тип дела</th>
+                                    <th scope="col">Тип услуги</th>
                                     <th scope="col">Дата старта</th>
-                                    <th scope="col">Юрист</th>
+                                    <th scope="col">менеджер</th>
                                     <th scope="col">Статус</th>
                                     <th scope="col">Действия</th>
                                 </tr>
@@ -240,7 +240,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>Наименование дела</td>
+                                    <td>Наименование услуги</td>
                                     <td><input type="text" name="nameCase" class="form-control" placeholder="Input box"></td>
                                 </tr>
                                 <tr>
@@ -317,7 +317,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>Адвокат 1</td>
+                                    <td>менеджер 1</td>
                                     <td>
 
                                         <select class="custom-select" name="law1">
@@ -331,7 +331,7 @@
                                                     {
 
 
-                                                        <option selected value="-1">Выберите Адвоката</option>
+                                                        <option selected value="-1">выберите менеджера</option>
                                                     }
                                                     else
                                                     {
@@ -345,7 +345,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Адвокат 2</td>
+                                    <td>менеджер 2</td>
                                     <td>
 
                                         <select class="custom-select" name="law2">
@@ -359,7 +359,7 @@
                                                     {
 
 
-                                                        <option selected value="-1">Выберите Адвоката</option>
+                                                        <option selected value="-1">выберите менеджера</option>
                                                     }
                                                     else
                                                     {
@@ -373,7 +373,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Адвокат 3</td>
+                                    <td>менеджер 3</td>
                                     <td>
 
 
@@ -386,7 +386,7 @@
                                                     @if (i == 0)
                                                     {
 
-                                                        <option selected value="-1">Выберите Адвоката</option>
+                                                        <option selected value="-1">выберите менеджера</option>
                                                     }
                                                     else
                                                     {
@@ -400,7 +400,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Адвокат 4</td>
+                                    <td>менеджер 4</td>
                                     <td>
 
 
@@ -413,7 +413,7 @@
                                                     @if (i == 0)
                                                     {
 
-                                                        <option selected value="-1">Выберите Адвоката</option>
+                                                        <option selected value="-1">выберите менеджера</option>
                                                     }
                                                     else
                                                     {
@@ -427,7 +427,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Адвокат 5</td>
+                                    <td>менеджер 5</td>
                                     <td>
 
 
@@ -441,7 +441,7 @@
                                                     {
 
 
-                                                        <option selected value="-1">Выберите Адвоката</option>
+                                                        <option selected value="-1">выберите менеджера</option>
                                                     }
                                                     else
                                                     {

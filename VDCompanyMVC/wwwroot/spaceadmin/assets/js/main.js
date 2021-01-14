@@ -55,7 +55,7 @@ function addrow(name, id) {
         var el = $('<tr>' +
         '<td>' + name + '</td>' +
         '<td style="width: 50px;">' +
-        '<button class="btn btn-outline-danger" law_id=' + id + ' title="Удалить из дела" onclick="del(this)">✕</button>' +
+        '<button class="btn btn-outline-danger" law_id=' + id + ' title="Удалить из услуги" onclick="del(this)">✕</button>' +
         '</td>' +
         '</tr>');
     $('#tablemembers').append(el);
@@ -96,7 +96,7 @@ function getmembers(id_case) {
 var id_lawyer = 0;
 function editlawyer(id) {
     id_lawyer = id;
-    $('#ModalLabel').text('Редактирование данных юриста id = ' + id)
+    $('#ModalLabel').text('Редактирование данных менеджера id = ' + id)
     $('#newlawyer').hide();
     $('#editlawyer').show();
     $.ajax({
@@ -127,7 +127,7 @@ function newlawyer() {
     $('#fio').val("");
     $('#log').val("");
     $('#psw').val("");
-    $('#ModalLabel').text('Добавление нового юриста')
+    $('#ModalLabel').text('Добавление нового менеджера')
     $('#newlawyer').show();
     $('#editlawyer').hide();
     $('#modal').modal('show');
