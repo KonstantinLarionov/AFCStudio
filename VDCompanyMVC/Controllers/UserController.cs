@@ -158,12 +158,8 @@ namespace VDCompany.Controllers
         [HttpGet]
         public IActionResult Contacts()
         {
-            /*ContactsDTO contacts = new ContactsDTO
-                (
-                    HttpContext.SendToUser(u => u.GetLawyers()),
-                    HttpContext.SendToUser(u => u.GetContacts())
-                );*/
-            return View();
+            ServiceVDContacts contacts = db.Contacts.FirstOrDefault();
+            return View(contacts);
         }
         [HttpGet]
         public IActionResult PDN()

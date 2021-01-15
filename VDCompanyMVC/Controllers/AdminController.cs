@@ -110,7 +110,6 @@ namespace VDCompany.Controllers
                 model.LinkVK = linkvk;
                 model.LinkFace = linkface;
                 model.LinkOK = linkok;
-                db.SaveChanges();
             }
             else
             {
@@ -131,8 +130,8 @@ namespace VDCompany.Controllers
                 LinkOK = linkok
             };
                 db.Contacts.Add(model);
-                db.SaveChanges();
             }
+            db.SaveChanges();
             return Redirect("/Admin/Contacts");
         }
 
