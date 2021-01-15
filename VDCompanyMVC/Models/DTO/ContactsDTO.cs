@@ -13,6 +13,11 @@ namespace VDCompanyMVC.Models.DTO
             Lawyers = lawyers;
             ServiceVD = serviceVD;
         }
+        public ContactsDTO()
+        {
+
+        }
+
 
         public List<Lawyer> Lawyers { get; set; } = new List<Lawyer>();
         public ServiceVDContacts ServiceVD { get; set; } = new ServiceVDContacts();

@@ -1,5 +1,5 @@
 ﻿ @{Layout = "_LayoutAdmin";} 
-@model VDCompanyMVC.Models.Objects.ServiceVDContacts
+@model VDCompanyMVC.Models.DTO.ContactsDTO
   <!--MAINPAGE-->
 <div class="content content-fixed">
     <div class="container pd-x-0 pd-lg-x-10 pd-xl-x-0">
@@ -20,7 +20,8 @@
                 </button>
             </div>
         </div>
-        <form action="/Admin/SetContacts" method="post">
+    @if (Model.ServiceVD != null)
+      {  <form action="/Admin/ChangeContacts" method="post">
             <div class="row row-xs">
                 <div class="col-lg">
                     <div class=" ht-100p d-flex flex-column justify-content-between align-items-center">
@@ -36,58 +37,58 @@
                                 <tbody>
                                     <tr>
                                         <th scope="row">Фамилия Директора</th>
-                                        <td><input value="@Model.Familio" name="Familio" type="text" class="form-input" /></td>
+                                        <td><input value="@Model.ServiceVD.Familio" name="Familio" type="text" class="form-input" /></td>
                                     </tr>
                                     <tr>
                                         <th scope="row">Имя Директора</th>
-                                        <td><input value="@Model.Name" name="Name" type="text" class="form-input" /></td>
+                                        <td><input value="@Model.ServiceVD.Name" name="Name" type="text" class="form-input" /></td>
                                     </tr>
                                     <tr>
                                         <th scope="row">Отчество Директора</th>
-                                        <td><input value="@Model.Otch" name="Otch" type="text" class="form-input" /></td>
+                                        <td><input value="@Model.ServiceVD.Otch" name="Otch" type="text" class="form-input" /></td>
                                     </tr>
                                     <tr>
                                         <th scope="row">Описание Директора</th>
-                                        <td><input value="@Model.About" type="text" name="About" class="form-input" /></td>
+                                        <td><input value="@Model.ServiceVD.About" type="text" name="About" class="form-input" /></td>
                                     </tr>
                                     <tr>
                                         <th scope="row">Почта директора</th>
-                                        <td><input value="@Model.EmailAdmin" name="EmailAdmin" type="text" class="form-input" /></td>
+                                        <td><input value="@Model.ServiceVD.EmailAdmin" name="EmailAdmin" type="text" class="form-input" /></td>
                                     </tr>
                                     <tr>
                                         <th scope="row">Телефон директора</th>
-                                        <td><input value="@Model.PhoneAdmin" name="PhoneAdmin" type="text" class="form-input" /></td>
+                                        <td><input value="@Model.ServiceVD.PhoneAdmin" name="PhoneAdmin" type="text" class="form-input" /></td>
                                     </tr>
                                     <tr>
                                         <th scope="row">Почта поддержки компании</th>
-                                        <td><input  value="@Model.EmailSupport" name="EmailSupport" type="text" class="form-input" /></td>
+                                        <td><input  value="@Model.ServiceVD.EmailSupport" name="EmailSupport" type="text" class="form-input" /></td>
                                     </tr>
                                     <tr>
                                         <th scope="row">Телефон поддержки компании</th>
-                                        <td><input  value="@Model.PhoneSupport" name="PhoneSupport" type="text" class="form-input" /></td>
+                                        <td><input  value="@Model.ServiceVD.PhoneSupport" name="PhoneSupport" type="text" class="form-input" /></td>
                                     </tr>
                                     <tr>
                                         <th scope="row">Фактический адресс компании</th>
-                                        <td><input  value="@Model.Address" name="Address" type="text" class="form-input" /></td>
+                                        <td><input  value="@Model.ServiceVD.Address" name="Address" type="text" class="form-input" /></td>
                                     </tr>
                                     <tr>
                                         <th scope="row">Фактический адресс поддержки</th>
-                                        <td><input value="@Model.AddressSupport" name="AddressSupport" type="text" class="form-input" /></td>
+                                        <td><input value="@Model.ServiceVD.AddressSupport" name="AddressSupport" type="text" class="form-input" /></td>
                                     </tr>
 
                                     <tr>
                                         <th scope="row">Ссылка вконтакте</th>
-                                        <td><input value="@Model.LinkVK" name="LinkVK" type="text" class="form-input" /></td>
+                                        <td><input value="@Model.ServiceVD.LinkVK" name="LinkVK" type="text" class="form-input" /></td>
                                     </tr>
 
                                     <tr>
                                         <th scope="row">Ссылка фейсбук</th>
-                                        <td><input  value="@Model.LinkFace" name="LinkFace" type="text" class="form-input" /></td>
+                                        <td><input  value="@Model.ServiceVD.LinkFace" name="LinkFace" type="text" class="form-input" /></td>
                                     </tr>
 
                                     <tr>
                                         <th scope="row">Ссылка одноклассники</th>
-                                        <td><input  value="@Model.LinkOK" name="LinkOK" type="text" class="form-input" /></td>
+                                        <td><input  value="@Model.ServiceVD.LinkOK" name="LinkOK" type="text" class="form-input" /></td>
                                     </tr>
 
                                 </tbody>
@@ -97,7 +98,7 @@
                     </div>
                 </div>
             </div>
-        </form>
+        </form> }
 
     </div><!-- container -->
 </div><!-- content -->

@@ -71,13 +71,72 @@ namespace VDCompany.Controllers
         [HttpGet]
         public IActionResult Contacts()
         {
-            /*ContactsDTO contacts = new ContactsDTO
-                (
-                    HttpContext.SendToUser(u => u.GetLawyers()),
-                    HttpContext.SendToUser(u => u.GetContacts())
-                );*/
-            return View();
+            var lawyers = db.Lawyers.ToList();
+            var cont = db.Contacts.FirstOrDefault();
+            ContactsDTO conts = new ContactsDTO { Lawyers = lawyers, ServiceVD = cont };
+            return View(conts);
         }
+
+        [HttpPost]
+        public IActionResult ChangeContacts(
+        string familio,
+        string name,
+        string otch,
+        string about,
+        string emailadmin,
+        string phoneadmin,
+        string emailsupport,
+        string phonesupport,
+        string address,
+        string addresssupport,
+        string linkvk,
+        string linkface,
+        string linkok)
+        {
+            ServiceVDContacts model = null;
+            if (db.Contacts.Any())
+            {
+                model = db.Contacts.FirstOrDefault();
+                model.Familio = familio;
+                model.Name = name;
+                model.Otch = otch;
+                model.About = about;
+                model.EmailAdmin = emailadmin;
+                model.PhoneAdmin = phoneadmin;
+                model.EmailSupport = emailsupport;
+                model.PhoneSupport = phonesupport;
+                model.Address = address;
+                model.AddressSupport = addresssupport;
+                model.LinkVK = linkvk;
+                model.LinkFace = linkface;
+                model.LinkOK = linkok;
+                db.SaveChanges();
+            }
+            else
+            {
+                model = new ServiceVDContacts
+                {
+                Familio = familio,
+                Name = name,
+                Otch = otch,
+                About = about,
+                EmailAdmin = emailadmin,
+                PhoneAdmin = phoneadmin,
+                EmailSupport = emailsupport,
+                PhoneSupport = phonesupport,
+                Address = address,
+                AddressSupport = addresssupport,
+                LinkVK = linkvk,
+                LinkFace = linkface,
+                LinkOK = linkok
+            };
+                db.Contacts.Add(model);
+                db.SaveChanges();
+            }
+            return Redirect("/Admin/Contacts");
+        }
+
+
         [HttpGet]
         public IActionResult Users()
         {
