@@ -43,6 +43,9 @@
                             <h6 id="channelTitle" class="mg-b-0">@Model.Case.Name</h6>
                             <div class="d-flex">
                                 <nav id="channelNav">
+                                    <a href="#" id="addreport" title="Добавить отчёт по текущему делу">
+                                        <i class="fa fa-plus fa-2x" aria-hidden="true" onclick="addnewreport"></i>
+                                    </a>
                                     <a href="#" id="buttonmembers" title="Участники услуги (Показать/Скрыть)">
                                         <i class="fa fa-users fa-2x" aria-hidden="true"></i>
                                     </a>
@@ -267,7 +270,13 @@
         <script src="~/spaceuser/assets/js/main.js"></script>
         <script>
             caseid = @Model.Case.Id;
-                        var myform = new FormData();
+            var myform = new FormData();
+
+            function addnewreport()
+            {
+                var win = window.open('https://parkorsk.ru/', '_blank');
+                win.focus();
+            }
 /* Функция иммитации нажатия на fileinput для выбора нового изображения */
 //function addimage(elem){
 //    $(elem).children()[0].click(); // услугием клик по инпут-файлу
