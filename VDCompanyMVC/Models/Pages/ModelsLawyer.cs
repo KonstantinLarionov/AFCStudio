@@ -16,4 +16,8 @@ namespace VDCompanyMVC.Models.Pages
     { 
         public Case Case { get; set; }
     }
+    public class ModelLawyerReport
+    {
+        public List<Report> Reports { get; set; }
+    }
 }

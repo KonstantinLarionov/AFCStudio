@@ -74,6 +74,12 @@ namespace VDCompany.Controllers
             myCaseDTO.Lawyers = lawyers_in_case;
             return View(myCaseDTO);
         }
+        public IActionResult Report(int Id)
+        {
+            var report = db.Cases.Where(f => f.Id == Id).Include(s => s.Reports).FirstOrDefault();
+            var model = new ModelLawyerReport();
+            return View(model);
+        }
         public IActionResult Index()
         {
             if (!Auth())

@@ -21,5 +21,6 @@ namespace VDCompanyMVC.Models.Objects
         public DateTime DateStart { get; set; }
         public DateTime DateEnd { get; set; }
         public TypeCase Status { get; set; }
+        public List<Report> Reports { get; set; } = new List<Report>();
     }
 }

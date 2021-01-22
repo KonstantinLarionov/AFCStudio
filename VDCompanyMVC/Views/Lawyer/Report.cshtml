@@ -1,5 +1,5 @@
 ﻿@{ Layout = "_LayoutLaw";}
-@model VDCompanyMVC.Models.Pages.ModelLawyerCases
+@model VDCompanyMVC.Models.Pages.ModelLawyerReport
 <div class="content content-fixed">
     <div class="container pd-x-0 pd-lg-x-10 pd-xl-x-0">
         <div class="d-sm-flex align-items-center justify-content-between mg-b-20 mg-lg-b-25 mg-xl-b-30">
@@ -10,59 +10,138 @@
                         <li class="breadcrumb-item active" aria-current="page">Мои услуги</li>
                     </ol>
                 </nav>
-                <h4 class="mg-b-0 tx-spacing--1">Просмотр всех дел аккаунта</h4>
+                <h4 class="mg-b-0 tx-spacing--1">Отчёт по продвижению</h4>
             </div>
         </div>
         <div class=" ht-100p d-flex flex-column justify-content-between align-items-center">
-            <div class="table-responsive">
-                <table class="table table-primary table-hover table-striped mg-b-0">
-                    <thead>
-                        <tr>
-                            <td style="vertical-align:middle;" scope="col">ID</td>
-                            <td style="vertical-align:middle;" scope="col">Название</td>
-                            <td style="vertical-align:middle;" scope="col">Тип услуги</td>
-                            <td style="vertical-align:middle;" scope="col">Статус услуги</td>
-                            <td style="vertical-align:middle;" scope="col">Дата открытия</td>
-                            <td style="vertical-align:middle;" scope="col">Действие</td>
-                        </tr>
-                    </thead>
-                    <tbody id="TableBody">
-                        @if (Model.Cases != null && Model.Cases.Count != 0)
-                        {
-
-                            @for (int i = 0; i < Model.Cases.Count; i++)
-                            {
-                                <tr>
-                                    <td style="vertical-align:middle;" scope="row">@Model.Cases[i].Id</td>
-                                    <td style="vertical-align:middle;">@Model.Cases[i].Name</td>
-                                    <td style="vertical-align:middle;">@Model.Cases[i].Type</td>
-                                    <td style="vertical-align:middle;">@{ string state = "Закрыто"; }
-                                    @if (Model.Cases[i].Status == VDCompanyMVC.Models.Objects.TypeCase.Close)
-                                    {
-                                        @state
-                                    }
-                                    else if(Model.Cases[i].Status == VDCompanyMVC.Models.Objects.TypeCase.InProcess)
-                                    {
-                                        state = "В процессе";
-                                        @state;
-                                    }
-                                    else if (Model.Cases[i].Status == VDCompanyMVC.Models.Objects.TypeCase.Open)
-                                    {
-                                        state = "Открыто";
-                                        @state;
-                                    }
-                                    </td>
-                                    <td style="vertical-align:middle;">@Model.Cases[i].DateStart</td>
-
-                                    <td style="vertical-align:middle;"><a  href="/Lawyer/Case?id=@Model.Cases[i].Id" class="btn btn-primary">Перейти</a></td>
-                                </tr>
-
-                            }
-                        }
-
-                    </tbody>
-                </table>
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-6 justify-content-between align-items-center">
+                        <p>SEO</p>
+                    </div>
+                    <div class="col-6 justify-content-between align-items-center">
+                        <button class="btn-primary" onclick="addimage(this);">Добавить отчёт</button>
+                    </div>
+                </div>
+                <div class="row">
+                </div>
             </div>
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-6 justify-content-between align-items-center">
+                        <p>Группы</p>
+                    </div>
+                    <div class="col-6 justify-content-between align-items-center">
+                        <button class="btn-primary" onclick="addimage(this);">Добавить отчёт</button>
+                    </div>
+                </div>
+                <div class="row">
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-6 justify-content-between align-items-center">
+                        <p>Поисковики</p>
+                    </div>
+                    <div class="col-6 justify-content-between align-items-center">
+                        <button class="btn-primary" onclick="addimage(this);">Добавить отчёт</button>
+                    </div>
+                </div>
+                <div class="row">
+                </div>
+            </div> 
         </div>
     </div>
 </div>
+<script>
+    var myform = new FormData();
+    /* Функция иммитации нажатия на fileinput для выбора нового изображения */
+    function addimage(elem) {
+        $(elem).children()[0].click(); // делаем клик по инпут-файлу
+    }
+    $('#files').on('change', function () { // находим в элементе инпут-файл
+        $('#addingfiles').empty();
+        $('#addingfiles').append('<p>Выбранные файлы:</p>');
+        for (let i = 0; i < this.files.length; i++) {
+            myform.append('imgs', this.files[i]);
+            $('#addingfiles').append('<b>' + this.files[i].name + ' (' + mathsize(this.files[i].size) + ')</b><br>');
+        }
+    });
+    function clearmodal_j() {
+        //$('#phototype').find('option')[0].selected = true
+        clearfiles();
+    }
+    function clearfiles() {
+        $('#addingfiles').empty();
+        $('#files').val('');
+    }
+    function openmodal() {
+        clearmodal_j();
+        $('#modal').modal('show');
+    }
+    function send() {
+        console.log($('#phototype').val());
+        myform.append('type', $('#phototype').val());
+        $.ajax({
+            url: '/Lawyer/Report',
+            method: 'post',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: myform,
+            success: function (data) {
+                var a = JSON.parse(data);
+                if (a.status == 'success') {
+                    swal('Успешно', a.data, 'success');
+                }
+                if (a.status == 'error') {
+                    swal('Ошибка', a.data, 'error');
+                }
+            },
+        });
+    }
+    function mathsize(bytes) {
+        if ((t = bytes) < 1024)
+            return t + " bytes";
+        if ((t = bytes / 1024) < 1024)
+            return t.toFixed(2) + " Kb";
+        if ((t = bytes / 1024 / 1024) < 1024)
+            return t.toFixed(2) + " Mb";
+        else
+            return (t / 1024).toFixed(2) + " Gb";
+    }
+    $('.trash').on('click', function () {
+        var id_img = $(this).attr('id_image');
+        swal({
+            title: "Подтверждение",
+            text: "Удалить изображение?",
+            buttons: {
+                del: {
+                    text: "Удалить"
+                },
+                cancel_: {
+                    text: "Отмена"
+                }
+            }
+        }).then((value) => {
+            if (value === 'cancel_')
+                return;
+            if (value === 'del') {
+                $.ajax({
+                    url: '/Admin/DelGallery',
+                    method: 'post',
+                    data: "Id=" + id_img,
+                    success: function (data) {
+                        var a = JSON.parse(data);
+                        if (a.status == 'success') {
+                            swal('Успешно', a.data, 'success');
+                        }
+                        if (a.status == 'error') {
+                            swal('Ошибка', a.data, 'error');
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>
