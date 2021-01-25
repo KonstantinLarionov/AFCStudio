@@ -20,7 +20,7 @@
                         <p>SEO</p>
                     </div>
                     <div class="col-6 justify-content-between align-items-center">
-                        <button class="btn-primary" onclick="addimage(this);">Добавить отчёт</button>
+                        <button class="btn-primary" onclick="openmodal();">Добавить отчёт</button>
                     </div>
                 </div>
                 <div class="row">
@@ -32,7 +32,7 @@
                         <p>Группы</p>
                     </div>
                     <div class="col-6 justify-content-between align-items-center">
-                        <button class="btn-primary" onclick="addimage(this);">Добавить отчёт</button>
+                        <button class="btn-primary" onclick="openmodal();">Добавить отчёт</button>
                     </div>
                 </div>
                 <div class="row">
@@ -44,15 +44,68 @@
                         <p>Поисковики</p>
                     </div>
                     <div class="col-6 justify-content-between align-items-center">
-                        <button class="btn-primary" onclick="addimage(this);">Добавить отчёт</button>
+                        <button class="btn-primary" onclick="openmodal();">Добавить отчёт</button>
                     </div>
                 </div>
                 <div class="row">
                 </div>
-            </div> 
+            </div>
         </div>
     </div>
 </div>
+<div class="modal fade" id="modal">
+    <div class="modal-dialog m-2" style="max-width: none;" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalnewTitle">Добавление отчётов</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">✕</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-header bg-white ">
+                        <div class="justify-content-between" style="display: flex;">
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="newcontainer">
+                            <div type="image" class="mb-2">
+                                <div class="m-2 row justify-content-around">
+                                    <div title="Нажмите чтобы добавить" onclick="addimage(this)" style="display: flex; justify-content: center; cursor: pointer;">
+                                        <input id="files" type="file" multiple style="display: none;">
+                                        <img class="img-fluid" src="~/spaceadmin/adding.png">
+                                    </div>
+                                </div>
+                                <div id="addingfiles" class="text-center mt-2"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-danger" onclick="$('#modal').modal('hide');">Закрыть</button>
+                <button type="button" class="btn btn-warning" onclick="clearfiles();">Очистить список</button>
+                <button type="button" class="btn btn-success" onclick="send();">Загрузить</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/spaceuser/lib/jquery/jquery.min.js"></script>
+<script src="~/spaceuser/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="~/spaceuser/lib/feather-icons/feather.min.js"></script>
+<script src="~/spaceuser/lib/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+<script src="~/spaceuser/lib/jquery.flot/jquery.flot.js"></script>
+<script src="~/spaceuser/lib/jquery.flot/jquery.flot.stack.js"></script>
+<script src="~/spaceuser/lib/jquery.flot/jquery.flot.resize.js"></script>
+<script src="~/spaceuser/lib/chart.js/Chart.bundle.min.js"></script>
+<script src="~/spaceuser/lib/jqvmap/jquery.vmap.min.js"></script>
+<script src="~/spaceuser/lib/jqvmap/maps/jquery.vmap.usa.js"></script>
+<script src="~/spaceuser/assets/js/dashforge.chat.js"></script>
+<script src="~/spaceuser/assets/js/signalr.min.js"></script>
+<script src="~/spaceuser/assets/js/jquerry.cookie.js"></script>
+<script src="~/spaceuser/assets/js/main.js"></script>
+<script src="~/spaceadmin/assets/js/main.js"></script>
 <script>
     var myform = new FormData();
     /* Функция иммитации нажатия на fileinput для выбора нового изображения */

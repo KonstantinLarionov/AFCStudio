@@ -80,6 +80,44 @@ namespace VDCompany.Controllers
             var model = new ModelLawyerReport();
             return View(model);
         }
+        //public IActionResult Gallery(Models.Enums.ImageGalleryType type)
+        //{
+        //    IQueryable<GalleryDTO> req;
+        //    if (type > 0)
+        //        req = db.Gallery.Where(f => f.Type == type);
+        //    else
+        //        req = db.Gallery;
+        //    var imgs = req.ToList();
+        //    return View(new ParkStroiteleyMVC.Models.ModelPages.GalleryModel { Imgs = imgs, Type = type });
+        //}
+        //[HttpPost]
+        //public string Gallery(List<IFormFile> imgs, Models.Enums.ImageGalleryType type = 0)
+        //{
+        //    try
+        //    {
+        //        foreach (var file in imgs)
+        //        {
+        //            db.Gallery.Add(new GalleryDTO
+        //            {
+        //                NameFile = file.FileName,
+        //                Type = type,
+        //                DateAdd = DateTime.Now
+        //            });
+        //            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/gallery", file.FileName);
+        //            using (var stream = new FileStream(path, FileMode.Create))
+        //            {
+        //                file.CopyTo(stream);
+        //            }
+        //        }
+        //        db.SaveChanges();
+        //        return "{\"status\":\"success\", \"data\":\"Загружено файлов: " + imgs.Count.ToString() + "\"}";
+        //    }
+        //    catch (Exception exp)
+        //    {
+        //        return "{\"status\":\"error\", \"data\": \"" + exp.ToString() + "\"}";
+        //    }
+        //}
+
         public IActionResult Index()
         {
             if (!Auth())
