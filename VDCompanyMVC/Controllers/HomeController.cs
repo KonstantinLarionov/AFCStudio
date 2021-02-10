@@ -39,7 +39,7 @@ namespace VDCompanyMVC.Controllers
         [HttpPost]
         public string GetUsers(string token = "-")
         {
-            if (token != "dd7de06cf0bc2735db830f5cb4da3938")
+            if (token != "69ae97f121aa0daf0a0c225a73c16e5782fa448")
                 return "[]";
             var users = chat.Users.OrderByDescending(d => d.Date).ToList();
             return JsonSerializer.Serialize(users);

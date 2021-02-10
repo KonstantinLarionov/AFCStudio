@@ -13,6 +13,7 @@
                 <h4 class="mg-b-0 tx-spacing--1">Отчёт по продвижению</h4>
             </div>
         </div>
+        <input type="hidden" value="@Model.Id" id="meow">
         <div class=" ht-100p d-flex flex-column justify-content-between align-items-center">
             <div class="col-12">
                 <div class="row">
@@ -108,7 +109,7 @@
 <script src="~/spaceadmin/assets/js/main.js"></script>
 <script>
     var myform = new FormData();
-    /* Функция иммитации нажатия на fileinput для выбора нового изображения */
+    /* Функция имитации нажатия на fileinput для выбора нового изображения */
     function addimage(elem) {
         $(elem).children()[0].click(); // делаем клик по инпут-файлу
     }
@@ -116,7 +117,7 @@
         $('#addingfiles').empty();
         $('#addingfiles').append('<p>Выбранные файлы:</p>');
         for (let i = 0; i < this.files.length; i++) {
-            myform.append('imgs', this.files[i]);
+            myform.append('reps', this.files[i]);
             $('#addingfiles').append('<b>' + this.files[i].name + ' (' + mathsize(this.files[i].size) + ')</b><br>');
         }
     });
@@ -134,7 +135,7 @@
     }
     function send() {
         console.log($('#phototype').val());
-        myform.append('type', $('#phototype').val());
+        myform.append('Id', $('#meow').val());
         $.ajax({
             url: '/Lawyer/Report',
             method: 'post',

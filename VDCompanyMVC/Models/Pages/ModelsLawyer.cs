@@ -18,6 +18,7 @@ namespace VDCompanyMVC.Models.Pages
     }
     public class ModelLawyerReport
     {
+        public int Id { get; set; }
         public List<Report> Reports { get; set; }
     }
 }

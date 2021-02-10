@@ -115,20 +115,20 @@ namespace VDCompany.Controllers
             {
                 model = new ServiceVDContacts
                 {
-                Familio = familio,
-                Name = name,
-                Otch = otch,
-                About = about,
-                EmailAdmin = emailadmin,
-                PhoneAdmin = phoneadmin,
-                EmailSupport = emailsupport,
-                PhoneSupport = phonesupport,
-                Address = address,
-                AddressSupport = addresssupport,
-                LinkVK = linkvk,
-                LinkFace = linkface,
-                LinkOK = linkok
-            };
+                    Familio = familio,
+                    Name = name,
+                    Otch = otch,
+                    About = about,
+                    EmailAdmin = emailadmin,
+                    PhoneAdmin = phoneadmin,
+                    EmailSupport = emailsupport,
+                    PhoneSupport = phonesupport,
+                    Address = address,
+                    AddressSupport = addresssupport,
+                    LinkVK = linkvk,
+                    LinkFace = linkface,
+                    LinkOK = linkok
+                };
                 db.Contacts.Add(model);
             }
             db.SaveChanges();
@@ -143,7 +143,7 @@ namespace VDCompany.Controllers
                 return RedirectToRoute(new { controller = "User", action = "Login" });
             var users = db.Users.ToList();
             return View(new ModelAdminUsers
-            { 
+            {
                 Users = users
             });
         }
@@ -180,7 +180,7 @@ namespace VDCompany.Controllers
             if (!Auth())
                 return RedirectToRoute(new { controller = "User", action = "Login" });
             var lawyers = db.Lawyers.ToList();
-            return View(new ModelAdminLawyers { Lawyers = lawyers});
+            return View(new ModelAdminLawyers { Lawyers = lawyers });
         }
         [HttpGet]
         public IActionResult Bills()
@@ -197,6 +197,14 @@ namespace VDCompany.Controllers
         }
         #endregion
         #region forCases
+
+
+        public IActionResult Report()
+        {
+            var model = new ModelLawyerReport();
+            return View(model);
+        }
+
         [HttpPost]
         public string AddLawyer(int id_case, int id_lawyer)
         {

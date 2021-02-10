@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -76,53 +77,33 @@ namespace VDCompany.Controllers
         }
         public IActionResult Report(int Id)
         {
-            var report = db.Cases.Where(f => f.Id == Id).Include(s => s.Reports).FirstOrDefault();
             var model = new ModelLawyerReport();
+            model.Id = Id;
             return View(model);
         }
-        //public IActionResult Gallery(Models.Enums.ImageGalleryType type)
-        //{
-        //    IQueryable<GalleryDTO> req;
-        //    if (type > 0)
-        //        req = db.Gallery.Where(f => f.Type == type);
-        //    else
-        //        req = db.Gallery;
-        //    var imgs = req.ToList();
-        //    return View(new ParkStroiteleyMVC.Models.ModelPages.GalleryModel { Imgs = imgs, Type = type });
-        //}
-        //[HttpPost]
-        //public string Gallery(List<IFormFile> imgs, Models.Enums.ImageGalleryType type = 0)
-        //{
-        //    try
-        //    {
-        //        foreach (var file in imgs)
-        //        {
-        //            db.Gallery.Add(new GalleryDTO
-        //            {
-        //                NameFile = file.FileName,
-        //                Type = type,
-        //                DateAdd = DateTime.Now
-        //            });
-        //            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/gallery", file.FileName);
-        //            using (var stream = new FileStream(path, FileMode.Create))
-        //            {
-        //                file.CopyTo(stream);
-        //            }
-        //        }
-        //        db.SaveChanges();
-        //        return "{\"status\":\"success\", \"data\":\"Загружено файлов: " + imgs.Count.ToString() + "\"}";
-        //    }
-        //    catch (Exception exp)
-        //    {
-        //        return "{\"status\":\"error\", \"data\": \"" + exp.ToString() + "\"}";
-        //    }
-        //}
+        [HttpPost]
+        public string Report(List<IFormFile> reps, int Id)
+        {
+            var mycase = db.Cases.Where(x => x.Id == Id).Include(x => x.Reports).FirstOrDefault();
+            string name = $"Отчёт по заказу №{mycase.Id} от {DateTime.Now}";
+            foreach (var rep in reps)
+            {
+                string way = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\reports", rep.Name);
+                var report = new Report() {Id = Id, Name = name,CaseId= mycase.Id, Way = way, DateAdd = DateTime.Now, TypeReport = TypeReport.SEO};
+                mycase.Reports.Add(report);
+                using (var stream = new FileStream(way, FileMode.Create))
+                {
+                    rep.CopyTo(stream);
+                }
+            }
+            db.SaveChanges();
+            return "{\"status\":\"success\", \"data\":\"Загружено файлов: " + reps.Count.ToString() + "\"}";
+        }
 
         public IActionResult Index()
-        {
+        {  
             if (!Auth())
                 return RedirectToRoute(new { controller = "User", action = "Login" });
-
             return RedirectToRoute(new { controller = "Lawyer", action = "Cases" });
         }
         public IActionResult PDN()
