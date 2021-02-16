@@ -41,6 +41,12 @@ namespace VDCompany.Controllers
         {
             return View();
         }
+        public IActionResult Report(int Id)
+        {
+            var model = new ModelUserReport();
+            model.Id = Id;
+            return View(model);
+        }
         public IActionResult Login()
         {
             return View();

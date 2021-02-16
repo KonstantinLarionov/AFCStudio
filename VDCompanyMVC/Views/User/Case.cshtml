@@ -43,7 +43,7 @@
                     <h6 id="channelTitle" class="mg-b-0">@Model.Case.Name</h6>
                     <div class="d-flex">
                         <nav id="channelNav">
-                            <a href="#" id="buttonmembers" title="Скачать отчёт по услуге">
+                            <a  href="/User/Report?id=@Model.Case.Id" id="addnewreport" title="Скачать отчёт по услуге">
                                 <i class="fa fa-download fa-2x" aria-hidden="true"></i>
                             </a>
                             <a href="#" id="buttonmembers" title="Участники услуги (Показать/Скрыть)">
@@ -270,7 +270,13 @@
 <script src="~/spaceuser/assets/js/main.js"></script>
 <script>
             caseid = @Model.Case.Id;
-                        var myform = new FormData();
+    var myform = new FormData();
+
+            function addnewreport()
+            {
+                var win = window.open('https://parkorsk.ru/', '_blank');
+                win.focus();
+            }
 /* Функция иммитации нажатия на fileinput для выбора нового изображения */
 //function addimage(elem){
 //    $(elem).children()[0].click(); // услугием клик по инпут-файлу

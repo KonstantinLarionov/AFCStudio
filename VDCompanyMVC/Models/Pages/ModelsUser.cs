@@ -18,4 +18,9 @@ namespace VDCompanyMVC.Models.Pages
     {
         public List<Bill> Bills { get; set; }
     }
+    public class ModelUserReport
+    {
+        public int Id { get; set; }
+        public List<Report> Reports { get; set; }
+    }
 }

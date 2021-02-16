@@ -85,11 +85,11 @@ namespace VDCompany.Controllers
         public string Report(List<IFormFile> reps, int Id)
         {
             var mycase = db.Cases.Where(x => x.Id == Id).Include(x => x.Reports).FirstOrDefault();
-            string name = $"Отчёт по заказу №{mycase.Id} от {DateTime.Now}";
+            string name = $"Отчёт по заказу №{mycase.Id} от {DateTime.Now.ToShortDateString()}";
             foreach (var rep in reps)
             {
-                string way = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\reports", rep.Name);
-                var report = new Report() {Id = Id, Name = name,CaseId= mycase.Id, Way = way, DateAdd = DateTime.Now, TypeReport = TypeReport.SEO};
+                string way = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\reports", name);
+                var report = new Report{Name = name,CaseId= mycase.Id, Way = way, DateAdd = DateTime.Now, TypeReport = TypeReport.SEO};
                 mycase.Reports.Add(report);
                 using (var stream = new FileStream(way, FileMode.Create))
                 {
