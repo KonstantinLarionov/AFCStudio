@@ -27,7 +27,7 @@ namespace VDCompanyMVC.Controllers
             try
             {
                 Mailler.SendEmailAsync("mr.mishana-319@yandex.ru", "VDCOMPANY", "Обратная связь",
-                $"Новое собщение через обратную связь <br> <strong>Имя:</strong> { name } <br> <strong>Обратный Email:</strong> { email } <br> <strong>Сообщение:</strong><br>{ message }"
+                $"Новое сообщение через обратную связь <br> <strong>Имя:</strong> { name } <br> <strong>Обратный Email:</strong> { email } <br> <strong>Сообщение:</strong><br>{ message }"
                 ).GetAwaiter().GetResult();
                 return "{ \"status\": \"success\" }";
             }
@@ -41,6 +41,8 @@ namespace VDCompanyMVC.Controllers
         {
             if (token != "69ae97f121aa0daf0a0c225a73c16e5782fa448")
                 return "[]";
+
+
             var users = chat.Users.OrderByDescending(d => d.Date).ToList();
             return JsonSerializer.Serialize(users);
         }
