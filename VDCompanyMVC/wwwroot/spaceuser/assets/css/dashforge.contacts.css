@@ -314,7 +314,7 @@
 .contact-content-sidebar {
   background-color: #fff;
   position: absolute;
-  top: 0;
+  top: 55px;
   right: -260px;
   bottom: 0;
   border-left: 1px solid rgba(72, 94, 144, 0.16);

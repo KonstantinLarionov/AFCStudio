@@ -114,6 +114,10 @@ p {
     width: 130px;
     margin: 0 auto 35px;
 }
+.logologin {
+    width: 630px;
+    margin: 0 auto 35px;
+}
 
 .header h1 {
     font-family: 'Montserrat',sans-serif;

@@ -87,14 +87,12 @@ function toggleleft(){
     }
     $('#listmembers').toggleClass('toggled-left');
 }
-$('#message').keyup(function(e){
-    if(e.which == 13) isEnter=false;
-    if(e.which == 17) isCtrl=false;
-});
-$('#message').keydown(function(e){
-    if(e.which == 13) isEnter=true;
-    if(e.which == 17) isCtrl=true;
-    if(isCtrl && isEnter) send();
+
+$('#message').keypress(function (e) {
+    if (e.which == 13) {
+        send();
+        event.preventDefault();
+    }
 });
 function send() {
     if ($('#message').val().trim() == "") return;

@@ -20,6 +20,11 @@ img.rot {
     -webkit-animation: 7s linear 0s normal none infinite running rot;
     width: 100px;
 }
+img.rotlogin {
+    animation: 7s linear 0s normal none infinite running rot;
+    -webkit-animation: 7s linear 0s normal none infinite running rot;
+    width: 600px;
+}
 
 @keyframes rot {
     0% {

@@ -106,6 +106,11 @@ namespace VDCompany.Controllers
                 return RedirectToRoute(new { controller = "User", action = "Login" });
             return RedirectToRoute(new { controller = "Lawyer", action = "Cases" });
         }
+        public IActionResult Contacts()
+        {
+            ServiceVDContacts contacts = db.Contacts.FirstOrDefault();
+            return View(contacts);
+        }
         public IActionResult PDN()
         {
             if (!Auth())
