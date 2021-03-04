@@ -62,8 +62,8 @@ namespace VDCompany.Controllers
             {
                 string referal = "";
                 string psw = GenNewPsw(10);
-                string message =  $"Добро пожаловать в VDCompany! <br> Ваш логин: <strong> { email } </strong> <br> Ваш пароль: <strong> { psw } </strong>";
-                Mailler.SendEmailAsync(email, "VDCOMPANY", "Регистрация на сервисе", message).GetAwaiter().GetResult();
+                string message =  $"Добро пожаловать в AFCStudio! <br> Ваш логин: <strong> { email } </strong> <br> Ваш пароль: <strong> { psw } </strong>";
+                Mailler.SendEmailAsync(email, "AFCStudio", "Регистрация на сервисе", message).GetAwaiter().GetResult();
                 do
                 {
                     Random RNDREF = new Random();
@@ -241,8 +241,8 @@ namespace VDCompany.Controllers
             }
             try
             {
-                Mailler.SendEmailAsync(userinfo.login, "VDCOMPANY", "Создание нового услуги",
-                    $"Вы заказали новую услугу на сервисе VDCOMPANY! <br><br> Наименование вашего услуги: {new_case.Name} <br> Тип вашего услуги: {new_case.Type} <br> Дата создания: {new_case.DateStart} <br><br> После регистрации, дело появится в вашем личном кабинете в списке дел и вам будет назначен подходящий специалист.<br><br> <span style=\"color:red;\">По всем вопросам: companyvd@yandex.ru</span>").GetAwaiter().GetResult();
+                Mailler.SendEmailAsync(userinfo.login, "AFCStudio", "Создание новой услуги",
+                    $"Вы заказали новую услугу на сервисе AFCStudio! <br><br> Наименование вашей услуги: {new_case.Name} <br> Тип вашей услуги: {new_case.Type} <br> Дата создания: {new_case.DateStart} <br><br> После регистрации услуга появится в вашем личном кабинете в списке услуг и вам будет назначен подходящий специалист.<br><br> <span style=\"color:red;\">По всем вопросам: afc.studio@yandex.ru</span>").GetAwaiter().GetResult();
             }
             catch 
             {
