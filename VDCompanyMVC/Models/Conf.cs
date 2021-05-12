@@ -9,8 +9,8 @@ namespace VDCompanyMVC.Models
     {                                                           
 
 #if DEBUG
-        public static string ConnectDb { get; private set; } = "Server=localhost;Database=afcstand;User=root;Password=root;";
-        public static string DBChat { get; private set; } = "Server=localhost;Database=afcstand;User=root;Password=root;";
+        public static string ConnectDb { get; private set; } = "Server=localhost;Database=afcstand;User=root;Password=4Thehorde!;";
+        public static string DBChat { get; private set; } = "Server=localhost;Database=afcstand_chat;User=root;Password=4Thehorde!;";
 #else
 
         public static string ConnectDb { get; private set; } = "Server=localhost;Database=u0967433_afc;User=u0967_vd;Password=$lI2bg26;";
