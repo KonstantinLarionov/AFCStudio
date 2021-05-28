@@ -13,6 +13,7 @@ namespace VDCompanyMVC.Models.Objects
     {
         public int Id { get; set; }
         public string URL { get; set; }
+        public string Name { get; set; }
         public DateTime DateAdd { get; set; }
         public TypeDoc Type { get; set; }
     }

@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using VDCompany.Controllers;
 using VDCompanyMVC.Models.Entitys;
 using VDCompanyMVC.Models.Objects;
 using VDCompanyMVC.Models.Secur;
@@ -29,11 +30,13 @@ namespace VDCompanyMVC.Controllers
                 Mailler.SendEmailAsync("mr.mishana-319@yandex.ru", "VDCOMPANY", "Обратная связь",
                 $"Новое сообщение через обратную связь <br> <strong>Имя:</strong> { name } <br> <strong>Обратный Email:</strong> { email } <br> <strong>Сообщение:</strong><br>{ message }"
                 ).GetAwaiter().GetResult();
-                return "{ \"status\": \"success\" }";
+                return JsonAnswer.H_Success();
+                //return "{ \"status\": \"success\" }";
             }
             catch
             {
-                return "{ \"status\": \"error\" }";
+                return JsonAnswer.H_Error();
+                //return "{ \"status\": \"error\" }";
             }
         }
         [HttpPost]
@@ -114,11 +117,13 @@ namespace VDCompanyMVC.Controllers
                     }
                 }
                 db.SaveChanges();
-                return "{\"status\":\"success\", \"data\":\"Загружено файлов: " + files.Count.ToString() + "\"}";
+                return JsonAnswer.H_Gallery_FilesUploaded(files.Count.ToString());
+                //return "{\"status\":\"success\", \"data\":\"Загружено файлов: " + files.Count.ToString() + "\"}";
             }
             catch (Exception exp)
             {
-                return "{\"status\":\"error\", \"data\": \"" + exp.ToString() + "\"}";
+                return JsonAnswer.H_Gallery_Error(exp.ToString());
+                //return "{\"status\":\"error\", \"data\": \"" + exp.ToString() + "\"}";
             }
         }
     }

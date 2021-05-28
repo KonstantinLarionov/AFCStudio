@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using VDCompanyMVC.Hubs;
 using VDCompanyMVC.Models;
@@ -19,6 +20,24 @@ namespace VDCompanyMVC
 {
     internal static class Extensions
     {
+        public static string ToJson(this object obj)
+        {
+            return JsonConvert.SerializeObject(obj);
+        }
+        public static T ToObject<T>(this string json)
+        {
+            return JsonConvert.DeserializeObject<T>(json);
+        }
+        public static string Get(this string str, string nameParam)
+        {
+            var arrayStr = str.Split('-');
+            var selectSection = arrayStr.FirstOrDefault(x => x.Contains(nameParam));
+            if (!string.IsNullOrEmpty(selectSection))
+            {
+                return selectSection.Replace(nameParam, string.Empty).Trim();
+            }
+            return string.Empty;
+        }
         public static int ToInt(this string str)
         {
             try

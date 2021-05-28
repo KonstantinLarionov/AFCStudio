@@ -104,7 +104,7 @@
                                 </a>
                                 <a style="line-height: 100%;">Документы</a>
                             </div>
-                            <div class="chat-member-list">
+                            <div class="chat-member-list" id="uploaded-files">
                                 @*<a href="#" class="media file">
             <div class="card-file-thumb tx-warning">
                 <i class="far fa-file-image fa-2x"></i>
@@ -198,12 +198,37 @@
 
                                 @foreach (var item in Model.Case.Docs)
                                 {
+                                    string format = "fa-file";
+                                    switch (item.Type)
+                                    {
+                                        case VDCompanyMVC.Models.Objects.TypeDoc.IMG:
+                                            format = "fa-file-image";
+                                            break;
+                                        case VDCompanyMVC.Models.Objects.TypeDoc.XLC:
+                                            format = "fa-file-excel";
+                                            break;
+                                        case VDCompanyMVC.Models.Objects.TypeDoc.WORD:
+                                            format = "fa-file-word";
+                                            break;
+                                        case VDCompanyMVC.Models.Objects.TypeDoc.PDF:
+                                            format = "fa-file-pdf";
+                                            break;
+                                        case VDCompanyMVC.Models.Objects.TypeDoc.AUDIO:
+                                            format = "fa-file-audio";
+                                            break;
+                                        case VDCompanyMVC.Models.Objects.TypeDoc.VIDEO:
+                                            format = "fa-file-video";
+                                            break;
+                                    }
+
                                     <a href="#" class="media file">
+
                                         <div class="card-file-thumb tx-color-03">
-                                            <i class="far fa-file fa-2x"></i>
+                                            <i class="far @format fa-2x"></i>
                                         </div>
+
                                         <div class="media-body mg-l-10">
-                                            <span>@item.URL</span><br>
+                                            <span>@item.Name</span><br>
                                             <small>@item.DateAdd</small>
                                         </div>
                                     </a>
@@ -236,7 +261,7 @@
                                         <div class="m-2 row justify-content-around">
                                             <div title="Нажмите чтобы добавить" onclick="addimage(this)" style="display: flex; justify-content: center; cursor: pointer;">
                                                 <input id="files" type="file" multiple style="display: none;">
-                                                <img class="img-fluid" src="~/adding.png">
+                                                <img class="img-fluid" src="/chat/adding.png">
                                             </div>
                                         </div>
                                         <div id="addingfiles" class="text-center mt-2"></div>
@@ -248,7 +273,7 @@
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-danger" onclick="$('#modal').modal('hide');">Закрыть</button>
                         <button type="button" class="btn btn-warning" onclick="clearfiles();">Очистить список</button>
-                        <button type="button" class="btn btn-success" onclick="send();">Загрузить</button>
+                        <button type="button" class="btn btn-success" onclick="sendfile();$('#modal').modal('hide');">Загрузить</button>
                     </div>
                 </div>
             </div>
@@ -268,6 +293,7 @@
         <script src="~/spaceuser/assets/js/jquerry.cookie.js"></script>
         <script src="~/chat/sweetalert.js"></script>
         <script src="~/spaceuser/assets/js/main.js"></script>
+        <script src="~/spacelaw/assets/js/apploadfiles.js"></script>
         <script>
             caseid = @Model.Case.Id;
             var myform = new FormData();

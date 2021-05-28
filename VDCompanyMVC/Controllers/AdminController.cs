@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using VDCompanyMVC;
 using VDCompanyMVC.Models.DTO;
 using VDCompanyMVC.Models.Entitys;
 using VDCompanyMVC.Models.Objects;
@@ -16,10 +18,92 @@ namespace VDCompany.Controllers
 {
     public class AdminController : Controller
     {
+        Dictionary<string, TypeDoc> Keys = new Dictionary<string, TypeDoc>()
+        {
+            { "null", TypeDoc.NONE},
+            { "png", TypeDoc.IMG},
+            { "jpg", TypeDoc.IMG},
+            { "jpeg", TypeDoc.IMG},
+            { "bmp", TypeDoc.IMG},
+            { "xlsx", TypeDoc.XLC},
+            { "doc", TypeDoc.WORD},
+            { "docs", TypeDoc.WORD},
+            { "pdf", TypeDoc.PDF},
+            { "mp3", TypeDoc.AUDIO},
+            { "mp4", TypeDoc.VIDEO},
+        };
+
         private static readonly StartContext db = new StartContext(new DbContextOptions<StartContext>());
         private (string login, string password) userinfo = (null, null);
         private IQueryable curruser = null;
         #region AUTHLOGIN
+
+        [HttpPost]
+        public string GettingFiles(List<IFormFile> imgs, int id_case)
+        {
+
+            if (!Auth())
+                return "";
+            try
+            {
+                List<string> fileName = new List<string>();
+                List<Doc> files = new List<Doc>();
+                var @case = db.Cases.Where(x => x.Id == id_case).Include(x => x.Docs).FirstOrDefault();
+                string format;
+                foreach (var file in imgs)
+                {                    
+                    string path1 = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/received_files/", userinfo.login);
+                    bool folder = System.IO.Directory.Exists(path1);
+                    DirectoryInfo dirInfo = new DirectoryInfo(path1);
+                    if (!dirInfo.Exists)
+                    {
+                        dirInfo.Create();
+                    }
+                    string filename = file.FileName;
+                    string[] words = filename.Split(new char[] { '.' });
+                    format = words[1];
+                    var forma = Keys["null"];
+                    if (Keys.ContainsKey(format)) forma = Keys[format]; 
+                    string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/received_files/", userinfo.login, file.FileName);
+                    bool fileExist = System.IO.File.Exists(path);
+                    if (fileExist == true)
+                    {
+                        string nfile = words[0] + "(1)." + words[1];
+                        string nfilename = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/received_files/", userinfo.login, nfile);
+                        path = nfilename;
+                    }
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
+                    
+                    files.Add(new Doc() 
+                    {
+                        URL = path,
+                        Name = file.FileName,
+                        DateAdd = DateTime.Now,
+                        Type = forma,
+                    });                                    
+                    @case.Docs.Add(new Doc()
+                    {
+                        URL = path,
+                        Name = file.FileName,
+                        DateAdd = DateTime.Now,
+                        Type = forma,
+                    });
+
+                }
+                db.SaveChanges();
+                string tojsn = files.ToJson();
+                string jret = "{\"status\":\"success\", \"data\":\"Загружено файлов: " + imgs.Count.ToString() + "\", \"files\":" + tojsn + "}";
+                return jret;
+            }
+            catch (Exception exp)
+            {
+                return "{\"status\":\"error\", \"data\": \"" + exp.ToString() + "\"}";
+            }
+        }
+
         public string test(int idCase)
         {
             var userCase = db.Cases.Where(@case => @case.Id == idCase).Include(c => c.Dialog.Messages).FirstOrDefault();
@@ -35,7 +119,7 @@ namespace VDCompany.Controllers
                 curruser = db.Admins.Where(f => f.Login == login && f.Password == password);
                 return db.Admins.Any(f => f.Email == login && f.Password == password);
             }
-            catch
+            catch(Exception E)
             {
                 return false;
             }
@@ -71,6 +155,8 @@ namespace VDCompany.Controllers
         [HttpGet]
         public IActionResult Contacts()
         {
+            if (!Auth())
+                return RedirectToRoute(new { controller = "User", action = "Login" });
             var lawyers = db.Lawyers.ToList();
             var cont = db.Contacts.FirstOrDefault();
             ContactsDTO conts = new ContactsDTO { Lawyers = lawyers, ServiceVD = cont };
@@ -93,6 +179,8 @@ namespace VDCompany.Controllers
         string linkface,
         string linkok)
         {
+            if (!Auth())
+                return RedirectToRoute(new { controller = "User", action = "Login" });
             ServiceVDContacts model = null;
             if (db.Contacts.Any())
             {
@@ -150,6 +238,8 @@ namespace VDCompany.Controllers
         [HttpGet]
         public IActionResult PDN()
         {
+            if (!Auth())
+                return RedirectToRoute(new { controller = "User", action = "Login" });
             return View();
         }
         [HttpGet]
@@ -209,7 +299,8 @@ namespace VDCompany.Controllers
         public string AddLawyer(int id_case, int id_lawyer)
         {
             if (!Auth())
-                return "{\"status\":\"not_authorized\"}";
+                return JsonAnswer.A_NotAuthorized();
+                //return "{\"status\":\"not_authorized\"}";
             if (db.Cases.Any(f => f.Id == id_case) && db.Lawyers.Any(f => f.Id == id_lawyer))
             {
                 if (!db.LawyersCases.Any(c => c.CaseId == id_case && c.LawyerId == id_lawyer))
@@ -217,31 +308,38 @@ namespace VDCompany.Controllers
                     db.LawyersCases.Add(new LawyersCases(id_case, id_lawyer));
                     db.SaveChanges();
                     var lawyer = db.Lawyers.Where(f => f.Id == id_lawyer).FirstOrDefault();
-                    return "{\"status\":\"success\", \"data\":\"Lawyer id=" + id_lawyer + " success added to case id=" + id_case + "\", \"object\":" + JsonSerializer.Serialize(lawyer) + "}";
+                    return JsonAnswer.A_AddLawyer_SuccessAded(id_lawyer, id_case, JsonSerializer.Serialize(lawyer));
+                    //return "{\"status\":\"success\", \"data\":\"Lawyer id=" + id_lawyer + " success added to case id=" + id_case + "\", \"object\":" + JsonSerializer.Serialize(lawyer) + "}";
                 }
-                return "{\"status\":\"isset\", \"data\":\"Lawyer id=" + id_lawyer + " already added to case id=" + id_case + "\"}";
+                return JsonAnswer.A_AddLawyer_AlreadyAdded(id_lawyer,id_case);
+                //return "{\"status\":\"isset\", \"data\":\"Lawyer id=" + id_lawyer + " already added to case id=" + id_case + "\"}";
             }
-            return "{\"status\":\"error \"data\":\"Lawyer id=" + id_lawyer + " or case id=" + id_case + " not found\"}";
+            return JsonAnswer.A_AddLawyer_NotFound(id_lawyer, id_case);
+            //return "{\"status\":\"error \"data\":\"Lawyer id=" + id_lawyer + " or case id=" + id_case + " not found\"}";
         }
         [HttpPost]
         public string DelLawyer(int id_case, int id_lawyer)
         {
             if (!Auth())
-                return "{\"status\":\"not_authorized\"}";
+                return JsonAnswer.A_NotAuthorized();
+                //return "{\"status\":\"not_authorized\"}";
             var l = db.LawyersCases.Where(f => f.CaseId == id_case && f.LawyerId == id_lawyer).FirstOrDefault();
             if (l != null)
             {
                 db.LawyersCases.Remove(l);
                 db.SaveChanges();
-                return "{\"status\":\"success\", \"data\":\"Lawyer id=" + id_lawyer + " was success deleted from case id=" + id_case + "\"}";
+                return JsonAnswer.A_DelLawyer_SuccessDeleted(id_lawyer, id_case);
+                //return "{\"status\":\"success\", \"data\":\"Lawyer id=" + id_lawyer + " was success deleted from case id=" + id_case + "\"}";
             }
-            return "{\"status\":\"error\", \"data\":\"Lawyer id=" + id_lawyer + " not found case id=" + id_case + "\"}";
+            return JsonAnswer.A_DelLawyer_NotFoundCase(id_lawyer, id_case);
+            //return "{\"status\":\"error\", \"data\":\"Lawyer id=" + id_lawyer + " not found case id=" + id_case + "\"}";
         }
         [HttpPost]
         public string GetLawyers(int id_case)
         {
             if (!Auth())
-                return "{\"status\":\"not_authorized\"}";
+                //return "{\"status\":\"not_authorized\"}";
+                return JsonAnswer.A_NotAuthorized();
             var caselawyers = db.LawyersCases.Where(f => f.CaseId == id_case).ToList();
             List<Lawyer> lawyers = new List<Lawyer>();
             foreach (var item in caselawyers)
@@ -261,7 +359,8 @@ namespace VDCompany.Controllers
         public string NewLawyer(string fio, string login, string password)
         {
             if (!Auth())
-                return "{\"status\":\"not_authorized\"}";
+                return JsonAnswer.A_NotAuthorized();
+                //return "{\"status\":\"not_authorized\"}";
             db.Lawyers.Add(new Lawyer
             { 
                 DateCreate = DateTime.Now,
@@ -270,14 +369,16 @@ namespace VDCompany.Controllers
                 Password = password
             });
             db.SaveChanges();
-            var new_id = db.Lawyers.Select(f => f.Id).Max(); 
-            return "{\"status\":\"success\", \"data\":\"success added new lawyer\", \"id\":" + new_id + "}";
+            var new_id = db.Lawyers.Select(f => f.Id).Max();
+            return JsonAnswer.A_NewLayer(new_id);
+            //return "{\"status\":\"success\", \"data\":\"success added new lawyer\", \"id\":" + new_id + "}";
         }
         [HttpPost]
         public string EditLawyer(int id, string fio, string login, string password)
         {
             if (!Auth())
-                return "{\"status\":\"not_authorized\"}";
+                return JsonAnswer.A_NotAuthorized();
+                //return "{\"status\":\"not_authorized\"}";
             var lawyer = db.Lawyers.Where(f => f.Id == id).FirstOrDefault();
             if (lawyer != null)
             {
@@ -285,15 +386,18 @@ namespace VDCompany.Controllers
                 lawyer.Login = login;
                 lawyer.Password = password;
                 db.SaveChanges();
-                return "{\"status\":\"success\", \"data\":\"success edit lawyer with id = " + id + "\"}";
+                return JsonAnswer.A_EditLayer_SuccessEditLayer(id);
+                //return "{\"status\":\"success\", \"data\":\"success edit lawyer with id = " + id + "\"}";
             }
-            return "{\"status\":\"error\", \"data\":\"not found lawyer with id = " + id + "\"}";
+            return JsonAnswer.A_NotFoundLayer(id);
+            //return "{\"status\":\"error\", \"data\":\"not found lawyer with id = " + id + "\"}";
         }
         [HttpPost]
         public string RemoveLawyer(int id)
         {
             if (!Auth())
-                return "{\"status\":\"not_authorized\"}";
+                return JsonAnswer.A_NotAuthorized();
+                //return "{\"status\":\"not_authorized\"}";
             var lawyer = db.Lawyers.Where(f => f.Id == id).FirstOrDefault();
             if (lawyer != null)
             {
@@ -302,21 +406,26 @@ namespace VDCompany.Controllers
                 if(lawyers_from_cases.Count > 0)
                     db.LawyersCases.RemoveRange(lawyers_from_cases);
                 db.SaveChanges();
-                return "{\"status\":\"success\", \"data\":\"success remove lawyer with id = " + id + "\"}";
+                return JsonAnswer.A_RemoveLawyer(id);
+                //return "{\"status\":\"success\", \"data\":\"success remove lawyer with id = " + id + "\"}";
             }
-            return "{\"status\":\"error\", \"data\":\"not found lawyer with id = " + id + "\"}";
+            return JsonAnswer.A_NotFoundLayer(id);
+            //return "{\"status\":\"error\", \"data\":\"not found lawyer with id = " + id + "\"}";
         }
         [HttpPost]
         public string GetInfoLawyer(int id)
         {
             if (!Auth())
-                return "{\"status\":\"not_authorized\"}";
+                return JsonAnswer.A_NotAuthorized();
+                //return "{\"status\":\"not_authorized\"}";
             var lawyer = db.Lawyers.Where(f => f.Id == id).FirstOrDefault();
             if (lawyer != null)
             {
-                return "{\"status\":\"success\", \"data\":" + JsonSerializer.Serialize(lawyer) + "}";
+                return JsonAnswer.A_Success(JsonSerializer.Serialize(lawyer));
+                //return "{\"status\":\"success\", \"data\":" + JsonSerializer.Serialize(lawyer) + "}";
             }
-            return "{\"status\":\"error\", \"data\":\"not found lawyer with id = " + id + "\"}";
+            return JsonAnswer.A_NotFoundLayer(id);
+            //return "{\"status\":\"error\", \"data\":\"not found lawyer with id = " + id + "\"}";
         }
         #endregion
         #region forUsers
@@ -324,7 +433,8 @@ namespace VDCompany.Controllers
         public string EditUser(int id, string fio, string login, string password)
         {
             if (!Auth())
-                return "{\"status\":\"not_authorized\"}";
+                return JsonAnswer.A_NotAuthorized();
+                //return "{\"status\":\"not_authorized\"}";
             var user = db.Users.Where(f => f.Id == id).FirstOrDefault();
             if (user != null)
             {
@@ -332,51 +442,60 @@ namespace VDCompany.Controllers
                 user.Login = login;
                 user.Password = password;
                 db.SaveChanges();
-                return "{\"status\":\"success\", \"data\":\"success edit user with id = " + id + "\"}";
+                return JsonAnswer.A_EditUser_SuccessEditUser(id);
+                //return "{\"status\":\"success\", \"data\":\"success edit user with id = " + id + "\"}";
             }
-            return "{\"status\":\"error\", \"data\":\"not found user with id = " + id + "\"}";
+            return JsonAnswer.A_NotFoundLayer(id);
+            //return "{\"status\":\"error\", \"data\":\"not found user with id = " + id + "\"}";
         }
         [HttpPost]
         public string GetInfoUser(int id)
         {
             if (!Auth())
-                return "{\"status\":\"not_authorized\"}";
+                return JsonAnswer.A_NotAuthorized(); 
+                //return "{\"status\":\"not_authorized\"}";
             var user = db.Users.Where(f => f.Id == id).FirstOrDefault();
             if (user != null)
             {
-                return "{\"status\":\"success\", \"data\":" + JsonSerializer.Serialize(user) + "}";
+                return JsonAnswer.A_Success(JsonSerializer.Serialize(user));
+                //return "{\"status\":\"success\", \"data\":" + JsonSerializer.Serialize(user) + "}";
             }
-            return "{\"status\":\"error\", \"data\":\"not found user with id = " + id + "\"}";
+            return JsonAnswer.A_NotFoundLayer(id);
+            //return "{\"status\":\"error\", \"data\":\"not found user with id = " + id + "\"}";
         }
         [HttpPost]
         public string GetUserBills(int id)
         {
             if (!Auth())
-                return "{\"status\":\"not_authorized\"}";
+                return JsonAnswer.A_NotAuthorized();
             var user = db.Users.Where(f => f.Id == id).Include(g => g.Bills).FirstOrDefault();
             if (user != null)
             {
-                return "{\"status\":\"success\", \"data\":" + JsonSerializer.Serialize(user.Bills) + "}";
+                return JsonAnswer.A_Success(JsonSerializer.Serialize(user.Bills));
+                //"{\"status\":\"success\", \"data\":" + JsonSerializer.Serialize(user.Bills) + "}";
             }
-            return "{\"status\":\"error\", \"data\":\"not found user with id = " + id + "\"}";
+            return JsonAnswer.A_NotFoundLayer(id);
+            //return "{\"status\":\"error\", \"data\":\"not found user with id = " + id + "\"}";
         }
         [HttpPost]
         public string GetUserCases(int id)
         {
             if (!Auth())
-                return "{\"status\":\"not_authorized\"}";
+                return JsonAnswer.A_NotAuthorized();
             var user = db.Users.Where(f => f.Id == id).Include(g => g.Cases).FirstOrDefault();
             if (user != null)
             {
-                return "{\"status\":\"success\", \"data\":" + JsonSerializer.Serialize(user.Cases) + "}";
+                return JsonAnswer.A_Success(JsonSerializer.Serialize(user.Cases));
+                //return "{\"status\":\"success\", \"data\":" + JsonSerializer.Serialize(user.Cases) + "}";
             }
-            return "{\"status\":\"error\", \"data\":\"not found user with id = " + id + "\"}";
+            return JsonAnswer.A_NotFoundLayer(id);
+            //return "{\"status\":\"error\", \"data\":\"not found user with id = " + id + "\"}";
         }
         [HttpPost]
         public string AddUserBill(int id, string name, string amount, string req)
         {
             if (!Auth())
-                return "{\"status\":\"not_authorized\"}";
+                return JsonAnswer.A_NotAuthorized();
             var userwithbills = db.Users.Where(f => f.Id == id).Include(b => b.Bills).FirstOrDefault();
             if (userwithbills != null)
             {
@@ -390,15 +509,17 @@ namespace VDCompany.Controllers
                 });
                 db.SaveChanges();
                 var new_id = db.Users.Where(f => f.Id == id).Include(b => b.Bills).FirstOrDefault().Bills.Select(f => f.Id).Max();
-                return "{\"status\":\"success\", \"data\":\"success added new bill id = " + new_id + "\", \"id\":" + new_id + "}";
+                return JsonAnswer.A_AddUserBill_SuccessAddedNewBill(new_id);
+                //return "{\"status\":\"success\", \"data\":\"success added new bill id = " + new_id + "\", \"id\":" + new_id + "}";
             }
-            return "{\"status\":\"error\", \"data\":\"not found user with id = " + id + "\"}";
+            return JsonAnswer.A_NotFoundLayer(id);
+            //return "{\"status\":\"error\", \"data\":\"not found user with id = " + id + "\"}";
         }
         [HttpPost]
         public string UserBillChangeStatus(int user_id, int bill_id, string status)
         {
             if (!Auth())
-                return "{\"status\":\"not_authorized\"}";
+                return JsonAnswer.A_NotAuthorized();
             var user = db.Users.Where(f => f.Id == user_id).Include(b => b.Bills).FirstOrDefault();
             if (user != null)
             {
@@ -413,10 +534,12 @@ namespace VDCompany.Controllers
                     if (status == "inprocess")
                         bill.Status = StatusBill.InProcess;
                     db.SaveChanges();
-                    return "{\"status\":\"success\", \"data\":\"success change status bill id = " + bill_id+ "\"}";
+                    return JsonAnswer.A_UserBillChangeStatus_SuccessChangeBill(bill_id);
+                    //return "{\"status\":\"success\", \"data\":\"success change status bill id = " + bill_id+ "\"}";
                 }
             }
-            return "{\"status\":\"error\", \"data\":\"not found user with id = " + bill_id + "\"}";
+            return JsonAnswer.A_NotFoundLayer(bill_id);
+            //return "{\"status\":\"error\", \"data\":\"not found user with id = " + bill_id + "\"}";
         }
         #endregion
         #region Helpers

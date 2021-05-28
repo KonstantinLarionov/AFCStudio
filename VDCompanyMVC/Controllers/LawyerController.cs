@@ -11,11 +11,27 @@ using VDCompanyMVC.Models.DTO;
 using VDCompanyMVC.Models.Entitys;
 using VDCompanyMVC.Models.Objects;
 using VDCompanyMVC.Models.Pages;
+using VDCompanyMVC;
 
 namespace VDCompany.Controllers
 {
     public class LawyerController : Controller
     {
+        Dictionary<string, TypeDoc> Keys = new Dictionary<string, TypeDoc>()
+        {
+            { "null", TypeDoc.NONE},
+            { "png", TypeDoc.IMG},
+            { "jpg", TypeDoc.IMG},
+            { "jpeg", TypeDoc.IMG},
+            { "bmp", TypeDoc.IMG},
+            { "xlsx", TypeDoc.XLC},
+            { "doc", TypeDoc.WORD},
+            { "docs", TypeDoc.WORD},
+            { "pdf", TypeDoc.PDF},
+            { "mp3", TypeDoc.AUDIO},
+            { "mp4", TypeDoc.VIDEO},
+        };
+
         private static readonly StartContext db = new StartContext(new DbContextOptions<StartContext>());
         private (string login, string password) userinfo = (null, null);
         private Lawyer curruser = null;
@@ -36,6 +52,73 @@ namespace VDCompany.Controllers
             }
         }
         #endregion
+
+        [HttpPost]
+        public string GettingFiles(List<IFormFile> imgs, int id_case)
+        {
+
+            if (!Auth())
+                return "";
+            try
+            {
+                List<string> fileName = new List<string>();
+                List<Doc> files = new List<Doc>();
+                var @case = db.Cases.Where(x => x.Id == id_case).Include(x => x.Docs).FirstOrDefault();
+                string format;
+                foreach (var file in imgs)
+                {
+                    string path1 = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/received_files/", userinfo.login);
+                    bool folder = System.IO.Directory.Exists(path1);
+                    DirectoryInfo dirInfo = new DirectoryInfo(path1);
+                    if (!dirInfo.Exists)
+                    {
+                        dirInfo.Create();
+                    }
+                    string filename = file.FileName;
+                    string[] words = filename.Split(new char[] { '.' });
+                    format = words[1];
+                    var forma = Keys["null"];
+                    if (Keys.ContainsKey(format)) forma = Keys[format];
+                    string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/received_files/", userinfo.login, file.FileName);
+                    bool fileExist = System.IO.File.Exists(path);
+                    if (fileExist == true)
+                    {
+                        string nfile = words[0] + "(1)." + words[1];
+                        string nfilename = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/received_files/", userinfo.login, nfile);
+                        path = nfilename;
+                    }
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
+
+                    files.Add(new Doc()
+                    {
+                        URL = path,
+                        Name = file.FileName,
+                        DateAdd = DateTime.Now,
+                        Type = forma,
+                    });
+                    @case.Docs.Add(new Doc()
+                    {
+                        URL = path,
+                        Name = file.FileName,
+                        DateAdd = DateTime.Now,
+                        Type = forma,
+                    });
+
+                }
+                db.SaveChanges();
+                string tojsn = files.ToJson();
+                string jret = "{\"status\":\"success\", \"data\":\"Загружено файлов: " + imgs.Count.ToString() + "\", \"files\":" + tojsn + "}";
+                return jret;
+            }
+            catch (Exception exp)
+            {
+                return "{\"status\":\"error\", \"data\": \"" + exp.ToString() + "\"}";
+            }
+        }
+
         public IActionResult Cases()
         {
             if (!Auth())
@@ -77,6 +160,8 @@ namespace VDCompany.Controllers
         }
         public IActionResult Report(int Id)
         {
+            if (!Auth())
+                return RedirectToRoute(new { controller = "User", action = "Login" });
             var model = new ModelLawyerReport();
             model.Id = Id;
             return View(model);
@@ -97,7 +182,8 @@ namespace VDCompany.Controllers
                 }
             }
             db.SaveChanges();
-            return "{\"status\":\"success\", \"data\":\"Загружено файлов: " + reps.Count.ToString() + "\"}";
+            return JsonAnswer.L_Report(reps.Count.ToString());
+            //return "{\"status\":\"success\", \"data\":\"Загружено файлов: " + reps.Count.ToString() + "\"}";
         }
 
         public IActionResult Index()
@@ -108,6 +194,8 @@ namespace VDCompany.Controllers
         }
         public IActionResult Contacts()
         {
+            if (!Auth())
+                return RedirectToRoute(new { controller = "User", action = "Login" });
             ServiceVDContacts contacts = db.Contacts.FirstOrDefault();
             return View(contacts);
         }

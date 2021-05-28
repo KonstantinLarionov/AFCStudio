@@ -13,11 +13,27 @@ using VDCompanyMVC.Models.Pages;
 using VDCompanyMVC.Models.Entitys;
 using VDCompanyMVC.Models.Objects;
 using VDCompanyMVC.Models.Secur;
+using System.IO;
+using VDCompanyMVC;
 
 namespace VDCompany.Controllers
 {
     public class UserController : Controller
     {
+        Dictionary<string, TypeDoc> Keys = new Dictionary<string, TypeDoc>()
+        {
+            { "null", TypeDoc.NONE},
+            { "png", TypeDoc.IMG},
+            { "jpg", TypeDoc.IMG},
+            { "jpeg", TypeDoc.IMG},
+            { "bmp", TypeDoc.IMG},
+            { "xlsx", TypeDoc.XLC},
+            { "doc", TypeDoc.WORD},
+            { "docs", TypeDoc.WORD},
+            { "pdf", TypeDoc.PDF},
+            { "mp3", TypeDoc.AUDIO},
+            { "mp4", TypeDoc.VIDEO},
+        };
         #region AUTHLOGIN
         private static readonly StartContext db = new StartContext(new DbContextOptions<StartContext>());
         private (string login, string password) userinfo = (null, null);
@@ -38,22 +54,25 @@ namespace VDCompany.Controllers
             }
         }
         public IActionResult Reg()
-        {
+        {           
             return View();
         }
         public IActionResult Report(int Id)
         {
+            if (!Auth())
+                return RedirectToRoute(new { controller = "User", action = "Login" });
             var model = new ModelUserReport();
             model.Id = Id;
             return View(model);
         }
         public IActionResult Login()
-        {
+        {     
             return View();
         }
         [HttpPost]
         public IActionResult Reg(string email, string name)
         {
+            
             if (db.Users.Any(x => x.Email == email))
             {
                 return View("Reg");
@@ -85,7 +104,7 @@ namespace VDCompany.Controllers
         }
         [HttpPost]
         public IActionResult Login(string email, string password)
-        {
+        {           
             User user = null;
             Admin admin = null;
             Lawyer lawyer = null;
@@ -158,18 +177,86 @@ namespace VDCompany.Controllers
             
             return RedirectToRoute(new {controller = "User", action = "Cases"} );
         }
-        
-        
-        
+
+        [HttpPost]
+        public string GettingFiles(List<IFormFile> imgs, int id_case)
+        {
+
+            if (!Auth())
+                return "";
+            try
+            {
+                List<string> fileName = new List<string>();
+                List<Doc> files = new List<Doc>();
+                var @case = db.Cases.Where(x => x.Id == id_case).Include(x => x.Docs).FirstOrDefault();
+                string format;
+                foreach (var file in imgs)
+                {
+                    string path1 = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/received_files/", userinfo.login);
+                    bool folder = System.IO.Directory.Exists(path1);
+                    DirectoryInfo dirInfo = new DirectoryInfo(path1);
+                    if (!dirInfo.Exists)
+                    {
+                        dirInfo.Create();
+                    }
+                    string filename = file.FileName;
+                    string[] words = filename.Split(new char[] { '.' });
+                    format = words[1];
+                    var forma = Keys["null"];
+                    if (Keys.ContainsKey(format)) forma = Keys[format];
+                    string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/received_files/", userinfo.login, file.FileName);
+                    bool fileExist = System.IO.File.Exists(path);
+                    if (fileExist == true)
+                    {
+                        string nfile = words[0] + "(1)." + words[1];
+                        string nfilename = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/received_files/", userinfo.login, nfile);
+                        path = nfilename;
+                    }
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
+
+                    files.Add(new Doc()
+                    {
+                        URL = path,
+                        Name = file.FileName,
+                        DateAdd = DateTime.Now,
+                        Type = forma,
+                    });
+                    @case.Docs.Add(new Doc()
+                    {
+                        URL = path,
+                        Name = file.FileName,
+                        DateAdd = DateTime.Now,
+                        Type = forma,
+                    });
+
+                }
+                db.SaveChanges();
+                string tojsn = files.ToJson();
+                string jret = "{\"status\":\"success\", \"data\":\"Загружено файлов: " + imgs.Count.ToString() + "\", \"files\":" + tojsn + "}";
+                return jret;
+            }
+            catch (Exception exp)
+            {
+                return "{\"status\":\"error\", \"data\": \"" + exp.ToString() + "\"}";
+            }
+        }
+
         [HttpGet]
         public IActionResult Contacts()
         {
+            if (!Auth())
+                return RedirectToRoute(new { controller = "User", action = "Login" });
             ServiceVDContacts contacts = db.Contacts.FirstOrDefault();
             return View(contacts);
         }
         [HttpGet]
         public IActionResult PDN()
         {
+            if (!Auth())
+                return RedirectToRoute(new { controller = "User", action = "Login" });
             return View();
         }
         [HttpGet]
@@ -222,7 +309,8 @@ namespace VDCompany.Controllers
         public string CreateCase([FromBody] CaseDTO newcase)
         {
             if (!Auth())
-                return "{\"info\":\"unauthorized\"}";
+                return JsonAnswer.U_Unauthorized();
+                // "{\"info\":\"unauthorized\"}";
             var userwithcases = db.Users.Where(f => f.Login == userinfo.login && f.Password == userinfo.password).Include(x => x.Cases).FirstOrDefault();
             Case new_case = new Case();
             try
@@ -237,7 +325,8 @@ namespace VDCompany.Controllers
             }
             catch
             {
-                return "{\"info\":\"error\"}";
+                return JsonAnswer.U_Error();
+                //return "{\"info\":\"error\"}";
             }
             try
             {
@@ -248,7 +337,8 @@ namespace VDCompany.Controllers
             {
             
             }
-                return "{\"info\":\"success\"}";
+                return JsonAnswer.U_Success();
+                //return "{\"info\":\"success\"}";
         }
         [HttpGet]
         public IActionResult Cases()
