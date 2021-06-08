@@ -15,6 +15,7 @@ using VDCompanyMVC.Models.Objects;
 using VDCompanyMVC.Models.Secur;
 using System.IO;
 using VDCompanyMVC;
+using AFCStudio.Models.Helpers;
 
 namespace VDCompany.Controllers
 {
@@ -81,8 +82,8 @@ namespace VDCompany.Controllers
             {
                 string referal = "";
                 string psw = GenNewPsw(10);
-                string message =  $"Добро пожаловать в AFCStudio! <br> Ваш логин: <strong> { email } </strong> <br> Ваш пароль: <strong> { psw } </strong>";
-                Mailler.SendEmailAsync(email, "AFCStudio", "Регистрация на сервисе", message).GetAwaiter().GetResult();
+                //string message =  $"Добро пожаловать в AFCStudio! <br> Ваш логин: <strong> { email } </strong> <br> Ваш пароль: <strong> { psw } </strong>";
+                //Mailler.SendEmailAsync(email, "AFCStudio", "Регистрация на сервисе", message).GetAwaiter().GetResult();
                 do
                 {
                     Random RNDREF = new Random();
@@ -99,6 +100,9 @@ namespace VDCompany.Controllers
                     Password = psw
                 });
                 db.SaveChanges();
+                string content = "<p><strong><font size=\"3\" face=\"Source Serif Pro\">Добро пожаловать в AFCStudio " + name + "!</font></strong></p><p><font size = \"3\" face = \"Source Serif Pro\">Спасибо за регистрацию на нашем сайте</font></p><p><font size = \"3\" face = \"Source Serif Pro\"> Ваш логин: " + email + " </font ></p><p><font size = \"3\" face = \"Source Serif Pro\" > Ваш пароль: " + psw + " </font></p>";
+                Letters.Send(email, "Регистрация на сайте.", content).GetAwaiter().GetResult();
+
                 return Redirect("Login");
             }
         }
@@ -330,6 +334,8 @@ namespace VDCompany.Controllers
             }
             try
             {
+                string content = "<p><font size =\"3\" face=\"Source Serif Pro\">Вы заказали новую услугу на сервисе AFCStudio!</font></p><p><font size =\"3\" face=\"Source Serif Pro\">Наименование вашей услуги: "+ new_case.Name + "</font></p><p><font size =\"3\" face=\"Source Serif Pro\">Тип вашей услуги: " + new_case.Type + "</font></p><p><font size = \"3\" face = \"Source Serif Pro\">Дата создания: " + new_case.DateStart + "</font></p><p><font size = \"3\" face = \"Source Serif Pro\"> После регистрации услуга появится в вашем личном кабинете в списке услуг и вам будет назначен подходящий специалист. </font ></p>";
+                Letters.Send(userinfo.login, "Создание новой услуги.", content).GetAwaiter().GetResult(); // доделать
                 Mailler.SendEmailAsync(userinfo.login, "AFCStudio", "Создание новой услуги",
                     $"Вы заказали новую услугу на сервисе AFCStudio! <br><br> Наименование вашей услуги: {new_case.Name} <br> Тип вашей услуги: {new_case.Type} <br> Дата создания: {new_case.DateStart} <br><br> После регистрации услуга появится в вашем личном кабинете в списке услуг и вам будет назначен подходящий специалист.<br><br> <span style=\"color:red;\">По всем вопросам: afc.studio@yandex.ru</span>").GetAwaiter().GetResult();
             }

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using AFCStudio.Models.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -300,11 +301,15 @@ namespace VDCompany.Controllers
         {
             if (!Auth())
                 return JsonAnswer.A_NotAuthorized();
+            var caseSelect = db.Cases.Where(f => f.Id == id_case).Include("Dialog").Include("Dialog.Users").FirstOrDefault();
                 //return "{\"status\":\"not_authorized\"}";
-            if (db.Cases.Any(f => f.Id == id_case) && db.Lawyers.Any(f => f.Id == id_lawyer))
+            if (db.Lawyers.Any(f => f.Id == id_lawyer) && caseSelect != null)
             {
                 if (!db.LawyersCases.Any(c => c.CaseId == id_case && c.LawyerId == id_lawyer))
                 {
+                    string email = caseSelect.Dialog.Users[0].Email;
+                    string content = "<p><font size = \"3\" face = \"Source Serif Pro\">За вами был закреплен менеджер ожидайте ответа по вашему вопросу.</font></p>";
+                    Letters.Send(email, "Закрепление за менеджером.", content).GetAwaiter().GetResult();
                     db.LawyersCases.Add(new LawyersCases(id_case, id_lawyer));
                     db.SaveChanges();
                     var lawyer = db.Lawyers.Where(f => f.Id == id_lawyer).FirstOrDefault();
