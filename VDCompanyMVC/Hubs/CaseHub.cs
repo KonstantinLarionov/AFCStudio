@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using VDCompanyMVC.Models.Objects;
 using System.IO;
+using AFCStudio.Models.Helpers;
 
 namespace VDCompanyMVC.Hubs
 {
@@ -29,7 +30,7 @@ namespace VDCompanyMVC.Hubs
             if (userRes.Item2)
             {
                 var user = userRes.Item1;
-                var userCase = database.Cases.Where(@case => @case.Id == idCase).Include(d => d.Dialog.Messages).Include(h => h.ClientsHub).FirstOrDefault();
+                var userCase = database.Cases.Where(@case => @case.Id == idCase).Include(d => d.Dialog.Messages).Include(h => h.ClientsHub).FirstOrDefault();                
                 //Наличие услуги у пользователя
                 if (userCase != null)
                 {
@@ -48,6 +49,8 @@ namespace VDCompanyMVC.Hubs
                     await Clients.Clients(clientsHub)
                         .SendAsync("ReceiveMessage", msg);
                 }
+                var lastogin = new User(); // фиксирование времени входа пользователя 
+                lastogin.LASTLOGIN = DateTime.Now;
             }
             #endregion
             #region IfAdminAuth
@@ -56,6 +59,7 @@ namespace VDCompanyMVC.Hubs
                 var admin = adminRes.Item1;
                 var adminCase = database.Cases.Where(@case => @case.Id == idCase).Include(d => d.Dialog.Messages).Include(h => h.ClientsHub).FirstOrDefault();
                 //Наличие услуги у пользователя
+                var caseSelect = database.Cases.Where(f => f.Id == idCase).Include("Dialog").Include("Dialog.Users").FirstOrDefault();
                 if (adminCase != null)
                 {
                     //Если подключенного пользователя нет в списке пиров по делу добавляем его в список
@@ -73,6 +77,12 @@ namespace VDCompanyMVC.Hubs
                     await Clients.Clients(clientsHub)
                         .SendAsync("ReceiveMessage", msg);
                 }
+                if (DateTime.Now - caseSelect.Dialog.Users[0].LASTLOGIN > TimeSpan.FromSeconds(100000)) 
+                {
+                    string email = caseSelect.Dialog.Users[0].Email;
+                    string content = "<p><font size = \"3\" face = \"Source Serif Pro\">Администратор " + admin.FIO + " прислал вам новое сообщение.</font></p>";
+                    Letters.Send(email, "У вас новое сообщение.", content).GetAwaiter().GetResult();
+                }
             }
             #endregion
             #region IfLawyerAuth
@@ -81,6 +91,7 @@ namespace VDCompanyMVC.Hubs
                 var lawyer = lawyerRes.Item1;
                 var lawyerCase = database.Cases.Where(@case => @case.Id == idCase).Include(d => d.Dialog.Messages).Include(h => h.ClientsHub).FirstOrDefault();
                 //Наличие услуги у пользователя
+                var caseSelect = database.Cases.Where(f => f.Id == idCase).Include("Dialog").Include("Dialog.Users").FirstOrDefault();
                 if (lawyerCase != null)
                 {
                     //Если подключенного пользователя нет в списке пиров по делу добавляем его в список
@@ -97,6 +108,12 @@ namespace VDCompanyMVC.Hubs
                     var msg = JsonSerializer.Serialize(obj);
                     await Clients.Clients(clientsHub)
                         .SendAsync("ReceiveMessage", msg);
+                }
+                if (DateTime.Now - caseSelect.Dialog.Users[0].LASTLOGIN > TimeSpan.FromSeconds(100000))
+                {
+                    string email = caseSelect.Dialog.Users[0].Email;
+                    string content = "<p><font size = \"3\" face = \"Source Serif Pro\">Администратор " + lawyer.FIO + " прислал вам новое сообщение.</font></p>";
+                    Letters.Send(email, "У вас новое сообщение.", content).GetAwaiter().GetResult();
                 }
             }
             #endregion
@@ -240,6 +257,7 @@ namespace VDCompanyMVC.Hubs
         }
         private (User? user, bool result) AuthUser(string login, string password)
         {
+            
             var user = database.Users.Where(u => u.Login == login && u.Password == password).FirstOrDefault();
             return user == null ? (null, false) : (user, true); 
         }

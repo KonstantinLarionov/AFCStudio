@@ -116,6 +116,8 @@ namespace VDCompany.Controllers
             user = db.Users.Where(u => u.Login == email && u.Password == password).FirstOrDefault();
             if (user != null)
             {
+                user.LASTLOGIN = DateTime.Now;
+                db.SaveChanges();
                 HttpContext.Session.SetString("login", email);
                 HttpContext.Session.SetString("password", password);
                 HttpContext.Response.Cookies.Append("login", email);
@@ -336,8 +338,9 @@ namespace VDCompany.Controllers
             {
                 string content = "<p><font size =\"3\" face=\"Source Serif Pro\">Вы заказали новую услугу на сервисе AFCStudio!</font></p><p><font size =\"3\" face=\"Source Serif Pro\">Наименование вашей услуги: "+ new_case.Name + "</font></p><p><font size =\"3\" face=\"Source Serif Pro\">Тип вашей услуги: " + new_case.Type + "</font></p><p><font size = \"3\" face = \"Source Serif Pro\">Дата создания: " + new_case.DateStart + "</font></p><p><font size = \"3\" face = \"Source Serif Pro\"> После регистрации услуга появится в вашем личном кабинете в списке услуг и вам будет назначен подходящий специалист. </font ></p>";
                 Letters.Send(userinfo.login, "Создание новой услуги.", content).GetAwaiter().GetResult(); // доделать
-                Mailler.SendEmailAsync(userinfo.login, "AFCStudio", "Создание новой услуги",
+                /*Mailler.SendEmailAsync(userinfo.login, "AFCStudio", "Создание новой услуги",
                     $"Вы заказали новую услугу на сервисе AFCStudio! <br><br> Наименование вашей услуги: {new_case.Name} <br> Тип вашей услуги: {new_case.Type} <br> Дата создания: {new_case.DateStart} <br><br> После регистрации услуга появится в вашем личном кабинете в списке услуг и вам будет назначен подходящий специалист.<br><br> <span style=\"color:red;\">По всем вопросам: afc.studio@yandex.ru</span>").GetAwaiter().GetResult();
+            */
             }
             catch 
             {

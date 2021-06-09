@@ -11,31 +11,6 @@ namespace AFCStudio.Models.Helpers
     {
         public static async Task Send(string email, string subject, string content )
             {
-            /*
-            string letter = null;
-            switch (op)
-            {
-                case Forms.Registration:
-                    letter = ;
-                    break;
-                case Forms.CreatingOrder:
-                    letter = CreatingOrder();
-                    break;
-                case Forms.UnreadMessages:
-                    letter = UnreadMessages();
-                    break;
-                case Forms.AssigningToManager:
-                    letter = AssigningToManager();
-                    break;
-                case Forms.ChangingStatus:
-                    letter = ChangingStatus();
-                    break;
-                case Forms.InvoiceIssued:
-                    letter = InvoiceIssued();
-                    break;
-            }
-            */
-
             var emailMessage = new MimeMessage();
 
             emailMessage.From.Add(new MailboxAddress("AFCStudio", "afc.studio@yandex.ru"));

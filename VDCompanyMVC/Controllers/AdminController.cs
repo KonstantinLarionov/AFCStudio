@@ -512,9 +512,13 @@ namespace VDCompany.Controllers
                     Status = StatusBill.InProcess,
                     DateCreate = DateTime.Now
                 });
+                string email = userwithbills.Login;
+                string content = "<p><font size = \"3\" face = \"Source Serif Pro\">Вам был выставлен счет по услуге " + name + ".</font></p><p><font size = \"3\" face = \"Source Serif Pro\">К оплате: "+ Convert.ToDouble(amount.Replace('.', ',')) + "</font></p><p><font size = \"3\" face = \"Source Serif Pro\">Реквизиты для оплаты: " + req + "</font></p>";
+                Letters.Send(email, "Счет к оплате.", content).GetAwaiter().GetResult();
                 db.SaveChanges();
                 var new_id = db.Users.Where(f => f.Id == id).Include(b => b.Bills).FirstOrDefault().Bills.Select(f => f.Id).Max();
                 return JsonAnswer.A_AddUserBill_SuccessAddedNewBill(new_id);
+
                 //return "{\"status\":\"success\", \"data\":\"success added new bill id = " + new_id + "\", \"id\":" + new_id + "}";
             }
             return JsonAnswer.A_NotFoundLayer(id);
