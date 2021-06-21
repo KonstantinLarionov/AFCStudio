@@ -19,5 +19,6 @@ namespace VDCompanyMVC.Models.Objects
         public DateTime DateCreate { get; set; }
         public DateTime DatePay { get; set; }
         public StatusBill Status { get; set; }
+        public bool IsRead { get; set; }
     }
 }

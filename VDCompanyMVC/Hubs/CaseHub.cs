@@ -80,7 +80,7 @@ namespace VDCompanyMVC.Hubs
                 if (DateTime.Now - caseSelect.Dialog.Users[0].LASTLOGIN > TimeSpan.FromSeconds(100000)) 
                 {
                     string email = caseSelect.Dialog.Users[0].Email;
-                    string content = "<p><font size = \"3\" face = \"Source Serif Pro\">Администратор " + admin.FIO + " прислал вам новое сообщение.</font></p>";
+                    string content = "<p><font size = \"3\" face = \"Source Serif Pro\">Администратор <strong>" + admin.FIO + "</strong> прислал вам новое сообщение в ваш открытый заказ пока вы были не в сети.<br>Зайдите в свой личный кабинет и посмотрите сообщение в чате вашего открытого заказа, возможно там что то важное или срочное.</font></p>";
                     Letters.Send(email, "У вас новое сообщение.", content).GetAwaiter().GetResult();
                 }
             }
@@ -112,7 +112,7 @@ namespace VDCompanyMVC.Hubs
                 if (DateTime.Now - caseSelect.Dialog.Users[0].LASTLOGIN > TimeSpan.FromSeconds(100000))
                 {
                     string email = caseSelect.Dialog.Users[0].Email;
-                    string content = "<p><font size = \"3\" face = \"Source Serif Pro\">Администратор " + lawyer.FIO + " прислал вам новое сообщение.</font></p>";
+                    string content = "<p><font size = \"3\" face = \"Source Serif Pro\">Менеджер <strong>" + lawyer.FIO + "</strong> прислал вам новое сообщение в ваш открытый заказ пока вы были не в сети.<br>Зайдите в свой личный кабинет и посмотрите сообщение в чате вашего открытого заказа, возможно там что то важное или срочное.</font></p>";
                     Letters.Send(email, "У вас новое сообщение.", content).GetAwaiter().GetResult();
                 }
             }

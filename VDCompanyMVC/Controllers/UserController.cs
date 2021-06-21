@@ -21,6 +21,7 @@ namespace VDCompany.Controllers
 {
     public class UserController : Controller
     {
+        #region Dictionary
         Dictionary<string, TypeDoc> Keys = new Dictionary<string, TypeDoc>()
         {
             { "null", TypeDoc.NONE},
@@ -35,6 +36,7 @@ namespace VDCompany.Controllers
             { "mp3", TypeDoc.AUDIO},
             { "mp4", TypeDoc.VIDEO},
         };
+        #endregion
         #region AUTHLOGIN
         private static readonly StartContext db = new StartContext(new DbContextOptions<StartContext>());
         private (string login, string password) userinfo = (null, null);
@@ -81,9 +83,7 @@ namespace VDCompany.Controllers
             else
             {
                 string referal = "";
-                string psw = GenNewPsw(10);
-                //string message =  $"Добро пожаловать в AFCStudio! <br> Ваш логин: <strong> { email } </strong> <br> Ваш пароль: <strong> { psw } </strong>";
-                //Mailler.SendEmailAsync(email, "AFCStudio", "Регистрация на сервисе", message).GetAwaiter().GetResult();
+                string psw = GenNewPsw(10);             
                 do
                 {
                     Random RNDREF = new Random();
@@ -122,7 +122,8 @@ namespace VDCompany.Controllers
                 HttpContext.Session.SetString("password", password);
                 HttpContext.Response.Cookies.Append("login", email);
                 HttpContext.Response.Cookies.Append("password", password);
-                return RedirectToRoute(new { controller = "User", action = "Cases" });
+                return RedirectToAction("Cases", "User", new { notify = 1 });
+                //return RedirectToRoute(new { controller = "User", action = "Cases" }); 
             }
             else 
             {
@@ -159,8 +160,9 @@ namespace VDCompany.Controllers
             if (db.Users.Any(x => x.Email == userDTO.Email))
             {
                 var user = db.Users.Where(x => x.Email == userDTO.Email).FirstOrDefault();
-                Mailler.SendEmailAsync(userDTO.Email, "VDCOMPANY", "Забыли пароль?", "Ваш пароль на сервисе VDCompany: <strong>" + user.Password + "</strong>").GetAwaiter().GetResult();
-
+                //Mailler.SendEmailAsync(userDTO.Email, "VDCOMPANY", "Забыли пароль?", "Ваш пароль на сервисе VDCompany: <strong>" + user.Password + "</strong>").GetAwaiter().GetResult();
+                string content = "<p><font size = \"3\" face = \"Source Serif Pro\">Забыли пароль?<br>Ваш пароль на сайте AFCStudio: <strong>" + user.Password + "</strong></font></p>";
+                Letters.Send(userDTO.Email, "Востановление пароля", content).GetAwaiter().GetResult();
                 return "Пароль успешно восстановлен. Проверьте вашу почту";
             }
             else
@@ -189,7 +191,7 @@ namespace VDCompany.Controllers
         {
 
             if (!Auth())
-                return "";
+                return JsonAnswer.U_Unauthorized();
             try
             {
                 List<string> fileName = new List<string>();
@@ -295,7 +297,8 @@ namespace VDCompany.Controllers
             if (!Auth())
                 return RedirectToRoute(new { controller = "User", action = "Login" });
             var userwithbills = db.Users.Where(f => f.Login == userinfo.login && f.Password == userinfo.password).Include(f => f.Bills).FirstOrDefault();
-
+            userwithbills.Bills.ForEach(x => x.IsRead = true);
+            db.SaveChanges();
             var model = new ModelUserBills
             {
                 Bills = userwithbills.Bills
@@ -316,7 +319,6 @@ namespace VDCompany.Controllers
         {
             if (!Auth())
                 return JsonAnswer.U_Unauthorized();
-                // "{\"info\":\"unauthorized\"}";
             var userwithcases = db.Users.Where(f => f.Login == userinfo.login && f.Password == userinfo.password).Include(x => x.Cases).FirstOrDefault();
             Case new_case = new Case();
             try
@@ -332,25 +334,20 @@ namespace VDCompany.Controllers
             catch
             {
                 return JsonAnswer.U_Error();
-                //return "{\"info\":\"error\"}";
             }
             try
             {
                 string content = "<p><font size =\"3\" face=\"Source Serif Pro\">Вы заказали новую услугу на сервисе AFCStudio!</font></p><p><font size =\"3\" face=\"Source Serif Pro\">Наименование вашей услуги: "+ new_case.Name + "</font></p><p><font size =\"3\" face=\"Source Serif Pro\">Тип вашей услуги: " + new_case.Type + "</font></p><p><font size = \"3\" face = \"Source Serif Pro\">Дата создания: " + new_case.DateStart + "</font></p><p><font size = \"3\" face = \"Source Serif Pro\"> После регистрации услуга появится в вашем личном кабинете в списке услуг и вам будет назначен подходящий специалист. </font ></p>";
-                Letters.Send(userinfo.login, "Создание новой услуги.", content).GetAwaiter().GetResult(); // доделать
-                /*Mailler.SendEmailAsync(userinfo.login, "AFCStudio", "Создание новой услуги",
-                    $"Вы заказали новую услугу на сервисе AFCStudio! <br><br> Наименование вашей услуги: {new_case.Name} <br> Тип вашей услуги: {new_case.Type} <br> Дата создания: {new_case.DateStart} <br><br> После регистрации услуга появится в вашем личном кабинете в списке услуг и вам будет назначен подходящий специалист.<br><br> <span style=\"color:red;\">По всем вопросам: afc.studio@yandex.ru</span>").GetAwaiter().GetResult();
-            */
+                Letters.Send(userinfo.login, "Создание новой услуги.", content).GetAwaiter().GetResult();              
             }
             catch 
             {
             
             }
-                return JsonAnswer.U_Success();
-                //return "{\"info\":\"success\"}";
+            return JsonAnswer.U_Success();
         }
         [HttpGet]
-        public IActionResult Cases()
+        public IActionResult Cases(string notify = null)
         {
             if (!Auth())
                 return RedirectToRoute(new { controller = "User", action = "Login" });
@@ -359,6 +356,7 @@ namespace VDCompany.Controllers
             {
                 Cases = userwithcases.Cases
             };
+            ViewData["notify"] = notify;
             return View(model);
         }
         #endregion
@@ -403,5 +401,22 @@ namespace VDCompany.Controllers
             return g;
         }
         #endregion
+
+        [HttpGet]
+        public string CheckingAccount()
+        {
+            if (!Auth())
+                return JsonAnswer.U_Unauthorized();
+            var usercheckingaccount = db.Users.Where(x => x.Email == userinfo.login && x.Password == userinfo.password).Include(x => x.Bills).FirstOrDefault();
+            if (usercheckingaccount != null) 
+            {
+                var bill = usercheckingaccount.Bills;
+                if (bill.Any(x => x.IsRead == false))
+                {
+                    return "{\"status\":\"success\"}";
+                }
+            }           
+            return "{\"status\":\"error\"}";
+        }
     }
 }

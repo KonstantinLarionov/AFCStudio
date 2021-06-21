@@ -308,7 +308,7 @@ namespace VDCompany.Controllers
                 if (!db.LawyersCases.Any(c => c.CaseId == id_case && c.LawyerId == id_lawyer))
                 {
                     string email = caseSelect.Dialog.Users[0].Email;
-                    string content = "<p><font size = \"3\" face = \"Source Serif Pro\">За вами был закреплен менеджер ожидайте ответа по вашему вопросу.</font></p>";
+                    string content = "<p><font size = \"3\" face = \"Source Serif Pro\">За вами был закреплен менеджер ожидайте ответа по вашему вопросу в чате открытого заказа.</font></p>";
                     Letters.Send(email, "Закрепление за менеджером.", content).GetAwaiter().GetResult();
                     db.LawyersCases.Add(new LawyersCases(id_case, id_lawyer));
                     db.SaveChanges();

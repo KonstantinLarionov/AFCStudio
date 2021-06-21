@@ -25,9 +25,21 @@
     <link rel="stylesheet" href="~/spaceuser/assets/css/dashforge.contacts.css">
     <link rel="stylesheet" href="~/spaceuser/assets/css/dashforge.chat.css">
     <link rel="stylesheet" href="~/spaceuser/assets/css/style.css">
+
+    <!-- Notification -->
+    <link rel="stylesheet" href="~/spaceuser/assets/css/toast.css">
+
+    <script type="text/javascript">
+        window.addEventListener("load", function () {
+            sendnotification();
+            setTimeout(arguments.callee, 5000);
+        }, 5000);
+    </script>
+
 </head>
 
-<body class="page-profile">  
+<body class="page-profile" onload="init()">
+    <div class="toasts" style="position: fixed; top: 70px; right: 15px; width: 250px;"></div>
 
     <header class="navbar navbar-header navbar-header-fixed">
         <a href="" id="mainMenuOpen" class="burger-menu"><i data-feather="menu"></i></a>
@@ -60,24 +72,24 @@
         </div><!-- navbar-menu-wrapper -->
         <div class="navbar-right">
             @*<div class="dropdown dropdown-message">
-                <a href="" class="dropdown-link new-indicator" data-toggle="dropdown">
-                    <i data-feather="message-square"></i>
-                    <span>5</span>
-                </a>
-                <div class="dropdown-menu dropdown-menu-right">
-                    <div class="dropdown-header">Уведомления</div>
-                    <a href="" class="dropdown-item">
-                        <div class="media">
-
-                            <div class="media-body mg-l-15">
-                                <strong>Socrates Itumay</strong>
-                                <p>nam libero tempore cum so...</p>
-                                <span>Mar 15 12:32pm</span>
-                            </div><!-- media-body -->
-                        </div><!-- media -->
+                    <a href="" class="dropdown-link new-indicator" data-toggle="dropdown">
+                        <i data-feather="message-square"></i>
+                        <span>5</span>
                     </a>
-                </div><!-- dropdown-menu -->
-            </div><!-- dropdown -->*@
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <div class="dropdown-header">Уведомления</div>
+                        <a href="" class="dropdown-item">
+                            <div class="media">
+
+                                <div class="media-body mg-l-15">
+                                    <strong>Socrates Itumay</strong>
+                                    <p>nam libero tempore cum so...</p>
+                                    <span>Mar 15 12:32pm</span>
+                                </div><!-- media-body -->
+                            </div><!-- media -->
+                        </a>
+                    </div><!-- dropdown-menu -->
+                </div><!-- dropdown -->*@
             <a href="/User/Logout" class="btn btn-outline-primary ml-3" title="Выход из личного кабинета">Выход</a>
         </div><!-- navbar-right -->
     </header><!-- navbar -->
@@ -86,6 +98,40 @@
 
     @RenderBody()
 
+
+
+    <!-- Notification -->
+    <div style="visibility: hidden;">
+        @{var login = ViewData["notify"];
+            <p id="login">@login</p>}
+    </div>
+
+    <script src="~/spaceuser/assets/js/toast.js"></script>
+    <script>
+        var login = document.getElementById('login').textContent;
+        if (login == 1) {
+            Toast.add('Рады привествовать вас на сайте AFCStudio');
+        }
+    </script>
+
+    <script>
+        function sendnotification() {
+            $.ajax({
+                url: '/User/CheckingAccount',
+                method: 'get',
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    console.log(data)
+                    var a = JSON.parse(data);
+                    if (a.status === 'success') {
+                        Toast.add('Вам выставили счет пройдите в раздел мои счета');
+                    }
+                }
+            });
+        }
+    </script>
 
     <!--<script src="~/spaceuser/lib/jquery/jquery.min.js"></script>
     <script src="~/spaceuser/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -101,11 +147,11 @@
     <script src="~/spaceuser/assets/js/dashforge.js"></script>
     <script src="~/spaceuser/assets/js/dashforge.sampledata.js"></script>
 
-    
+
     <script src="~/spaceuser/lib/js-cookie/js.cookie.js"></script>
     <script src="~/spaceuser/assets/js/dashforge.settings.js"></script>-->
 
-   
+
 </body>
 
 </html>
