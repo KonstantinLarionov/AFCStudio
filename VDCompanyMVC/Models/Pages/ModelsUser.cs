@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AFCStudio.Models.Objects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,5 +23,10 @@ namespace VDCompanyMVC.Models.Pages
     {
         public int Id { get; set; }
         public List<Report> Reports { get; set; }
+    }
+    public class ModelUserPrice
+    {
+        public int Id { get; set; }
+        public List<Price> Price { get; set; }
     }
 }

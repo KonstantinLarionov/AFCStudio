@@ -12,6 +12,9 @@ namespace VDCompanyMVC.Models
         public static string ConnectDb { get; private set; } = "Server=localhost;Database=afcstand;User=root;Password=root;";
         public static string DBChat { get; private set; } = "Server=localhost;Database=afcstand_chat;User=root;Password=root;";
 #else
+        public static string ConnectDb { get; private set; } = "Server=localhost;Database=u0967433_AFCNEW;User=u0967433_AFCNEW;Password=$lI2bg26;";
+        public static string DBChat { get; private set; } = "Server=localhost;Database=u0967433_AFCNEW_chat;User=u0967433_AFCNEW_chat;Password=$lI2bg26;";
+        /*
         public static string ConnectDb { get; private set; } = "Server=localhost;Database=u0967433_beta.afc;User=u0967433_admin;Password=*8cL0jq1;";
         public static string DBChat { get; private set; } = "Server=localhost;Database=u0967433_beta.afc_chat;User=u0967433_admin_chat;Password=Ome9g1?5;";
         /*public static string ConnectDb { get; private set; } = "Server=localhost;Database=afcstand;User=root;Password=root;";

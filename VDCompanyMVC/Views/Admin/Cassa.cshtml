@@ -1,0 +1,232 @@
+﻿@{ Layout = "_LayoutAdmin"; }
+@using AFCStudio.Models.Objects;
+@model VDCompanyMVC.Models.Pages.ModelAdminCassa
+<div class="content content-fixed">
+    <div class="container pd-x-0 pd-lg-x-10 pd-xl-x-0">
+        <div class="d-sm-flex align-items-center justify-content-between mg-b-20 mg-lg-b-25 mg-xl-b-30">
+            <div>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb breadcrumb-style1 mg-b-10">
+                        <li class="breadcrumb-item"><a href="#">Главная страница</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">касса</li>
+                    </ol>
+                </nav>
+                <h4 class="mg-b-0 tx-spacing--1">Касса @Model.Cassa.Name</h4>
+                <input type="hidden" id="id_cassa" value="@Model.Cassa.Id" />
+                <input type="hidden" id="is_open" value="@Model.Cassa.Open" />
+            </div>
+            <div class="d-none d-md-block">
+                <button class="btn btn-primary btn-sm pd-x-15" onclick="Closecassa()">Закрыть кассу</button>
+                <button class="btn btn-primary btn-sm pd-x-15" onclick="newcassa()">Добавить новую кассу</button>
+            </div>
+        </div>
+        <div class="row-flex">
+            <div class="col">
+                <form action="/Admin/Cassa" method="post">
+                    <div class="row">
+                        <div class="col-4"></div>
+                        <div class="col-2">
+                            <select class="form-control select2-no-search select2-hidden-accessible" name="cassaStart" id="cassaStart">
+                                @foreach (var item in Model.DateTimes)
+                                {
+                                    <option value="@item">@item</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-2">
+                            <button type="submit" class="btn btn-outline-primary" style="height: 38px">Выбрать кассу</button>
+                        </div>
+                        <div class="col-4"></div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div style="width: 100%; display: flex; justify-content: space-around ">
+            <div style="width: 50%; ">
+                <div style="height: 50px; width: 100%; display: flex; flex-wrap: wrap; justify-content: space-around; padding: 0px 0px 20px 0px ">
+
+                    <input type="text" class="form-control bd-0 wd-100" placeholder="Сумма" id="amount">
+
+                    <div class="wd-100" data-select2-id="29">
+                        <select class="form-control select2-no-search select2-hidden-accessible" id="operationtype">
+                            <option value="0" data-select2-id="30">Не выбрано</option>
+                            <option value="1" data-select2-id="31">Приход</option>
+                            <option value="2" data-select2-id="32">Уход</option>
+                        </select>
+                    </div>
+
+                    <input type="text" class="form-control bd-0 wd-100" placeholder="Коментарий" id="coment">
+
+                    <form class="wd-100" style="height: 38px">
+                        <div class="wd-100" style="height: 38px">
+                            <input class="wd-100" style="height: 38px" id="datep" onclick="datep()" />
+                        </div>
+                    </form>
+
+                    <button id="newoperation" type="button" class="btn btn-outline-primary wd-100" onclick="New_operation()">Добавить</button>
+                </div>
+
+                <div class=" ht-100p d-flex flex-column justify-content-between align-items-center">
+                    <div class="table-responsive">
+                        <table class="table table-primary table-hover table-striped mg-b-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Коментарий</th>
+                                    <th scope="col">Сумма</th>
+                                    <th scope="col">Дата</th>
+                                    <th scope="col">Тип операции</th>
+                                    <th scope="col">Состояние операции</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody0">
+                                @foreach (var item in Model.Cassa.Operatins)
+                                {
+                                    if (item.TimelessType == TimelessType.Current)
+                                    {
+                                        <tr id="@item.Id">
+                                            <td>@item.Coment</td>
+                                            <td>@item.Amount</td>
+                                            <td>@item.DateAdd</td>
+                                            <td>
+                                                @if (item.OperationType == OperationType.None)
+                                                {
+                                                    <span style="color: black">Не выбрано</span>
+                                                }
+                                                @if (item.OperationType == OperationType.Income)
+                                                {
+                                                    <span style="color: green">Приход</span>
+                                                }
+                                                @if (item.OperationType == OperationType.Сonsumption)
+                                                {
+                                                    <span style="color: orangered">Уход</span>
+                                                }
+                                            </td>
+                                            <td>Текущая операция</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                        <span style="color: green">Приход:  </span>
+                        <span id="incomecurrent">@Model.Cassa.IncomeCurrent  </span>
+                        <span style="color: orangered">Уход:  </span>
+                        <span id="consumptioncurrent">@Model.Cassa.СonsumptionCurrent  </span>
+                        <span>Баланс:  </span>
+                        <span id="balancecurrent">@Model.Cassa.BalanceCurrent </span>
+                    </div>
+                </div>
+            </div>
+            <div style="width: 10px;"></div>
+            <div style="width: 50%;">
+                <div style="height: 50px; width: 100%; display: flex; flex-wrap: wrap; justify-content: space-around; padding: 0px 0px 20px 0px ">
+
+                    <input type="text" class="form-control bd-0 wd-100" placeholder="Amount" id="amount_planing">
+
+                    <div class="wd-100" data-select2-id="29">
+                        <select class="form-control select2-no-search select2-hidden-accessible" id="operationtype_planing">
+                            <option value="0" data-select2-id="30">Не выбрано</option>
+                            <option value="1" data-select2-id="31">Приход</option>
+                            <option value="2" data-select2-id="32">Уход</option>
+                        </select>
+                    </div>
+
+                    <input type="text" class="form-control bd-0 wd-100" placeholder="Message" id="coment_planing">
+
+                    <form class="wd-100" style="height: 38px">
+                        <div class="wd-100" style="height: 38px">
+                            <input class="wd-100" style="height: 38px" id="datepi" onclick="datepi()" />
+                        </div>
+                    </form>
+
+                    <button id="newoperation" type="button" class="btn btn-outline-primary wd-100" onclick="New_operation_planing()">Добавить</button>
+                </div>
+
+                <div class=" ht-100p d-flex flex-column justify-content-between align-items-center">
+                    <div class="table-responsive">
+                        <table class="table table-primary table-hover table-striped mg-b-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Коментарий</th>
+                                    <th scope="col">Сумма</th>
+                                    <th scope="col">Дата</th>
+                                    <th scope="col">Тип операции</th>
+                                    <th scope="col">Состояние операции</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody1">
+                                @foreach (var item in Model.Cassa.Operatins)
+                                {
+                                    if (item.TimelessType == TimelessType.Planing)
+                                    {
+                                        <tr id="@item.Id">
+                                            <td>@item.Coment</td>
+                                            <td>@item.Amount</td>
+                                            <td>@item.DateAdd</td>
+                                            <td>
+                                                @if (item.OperationType == OperationType.None)
+                                                {
+                                                    <span style="color: black">Не выбрано</span>
+                                                }
+                                                @if (item.OperationType == OperationType.Income)
+                                                {
+                                                    <span style="color: green">Приход</span>
+                                                }
+                                                @if (item.OperationType == OperationType.Сonsumption)
+                                                {
+                                                    <span style="color: orangered">Уход</span>
+                                                }
+                                            </td>
+                                            <td>Плановая операция</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div>
+                        <span style="color: green">Приход</span>
+                        <span id="incomeplaning">@Model.Cassa.IncomePlaning</span>
+                        <span style="color: orangered">Уход</span>
+                        <span id="consumptionplaning">@Model.Cassa.СonsumptionPlaning</span>
+                        <span>Баланс</span>
+                        <span id="balanceplaning">@Model.Cassa.BalancePlaning</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content tx-14">
+            <div class="modal-header">
+                <h6 class="modal-title" id="ModalLabel">Добавление менеджера</h6>
+                <button type="button" class="close" onclick="closemodal()">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="form-group">
+                    <label for="name">Название кассы</label>
+                    <input type="text" class="form-control" id="name">
+                </div>             
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button id="newcassa" type="button" class="btn btn-primary tx-13" onclick="New_Cassa()">Добавить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/spaceadmin/assets/js/cassa.js"></script>
+
+
+<script src="~/spaceuser/lib/jquery/jquery.min.js"></script>
+<script src="~/spaceuser/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+

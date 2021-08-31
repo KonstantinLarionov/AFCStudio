@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AFCStudio.Models.Objects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,5 +18,10 @@ namespace VDCompanyMVC.Models.Pages
     public class ModelAdminUsers
     { 
         public List<User> Users { get; set; }
+    }
+    public class ModelAdminCassa
+    {
+        public Cassa Cassa { get; set; }
+        public List<DateTime> DateTimes { get; set; }
     }
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using AFCStudio.Models.Helpers;
+using AFCStudio.Models.Objects;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -286,6 +287,72 @@ namespace VDCompany.Controllers
             };
             return View(model);
         }
+
+        [HttpGet]
+        public IActionResult Cassa()
+        {
+            if (!Auth())
+                return RedirectToRoute(new { controller = "User", action = "Login" });
+
+            var cassa = db.Cassa.OrderByDescending(x=>x.Id).Include(x => x.Operatins).FirstOrDefault();
+
+            if (cassa == null)
+            {
+                cassa = new Cassa()
+                {
+                    Operatins = new List<Operatin>()
+
+                    //Name = "ss",
+                    //DateStart = DateTime.Now,
+                    //DateEnd = DateTime.Now,
+                    //Balance = 100,
+                    //Id = 0,
+                    //Income = 12,
+                    //Сonsumption = 12,
+                    //Operatins = new List<Operatin>() { new Operatin { Id = 0, Coment = "Продвижениев Яндекс поисковике", Amount = 1900, DateAdd = DateTime.Today, OperationType = OperationType.Income, TimelessType = TimelessType.Current }, new Operatin { Id = 1, Coment = "Продвижениев Яндекс поисковике", Amount = 1900, DateAdd = DateTime.Now, OperationType = OperationType.Income, TimelessType = TimelessType.Current }, }
+                };
+            }
+            var alldatastart = db.Cassa.Select(x => x.DateStart).ToList();
+            alldatastart.Reverse();
+            if (cassa.Operatins == null)
+            {
+                cassa.Operatins = new List<Operatin>();
+            }
+            return View(new ModelAdminCassa { Cassa = cassa, DateTimes = alldatastart });
+        }        
+       
+        [HttpPost]
+        public IActionResult Cassa(DateTime cassaStart)
+        {
+            if (!Auth())
+                return RedirectToRoute(new { controller = "User", action = "Login" });
+            
+            var allcasses = db.Cassa.Where(x => x.DateStart.Date == cassaStart.Date).Include(x => x.Operatins).FirstOrDefault(); // TODO: on месяц
+            if (allcasses == null)
+            {
+                allcasses = new Cassa()
+                {
+                    Operatins = new List<Operatin>()
+                    //Name = "ss",
+                    //DateStart = DateTime.Now,
+                    //DateEnd = DateTime.Now,
+                    //Balance = 100,
+                    //Id = 0,
+                    //Income = 12,
+                    //Сonsumption = 12,
+                    //Operatins = new List<Operatin>() { new Operatin { Id = 0, Coment = "Продвижениев Яндекс поисковике", Amount = 1900, DateAdd= DateTime.Now, OperationType = OperationType.Income, TimelessType= TimelessType.Current },}
+                };
+            }
+            if (allcasses.Operatins == null)
+            {
+                allcasses.Operatins = new List<Operatin>();
+            }
+            var alldatastart = db.Cassa.Select(x => x.DateStart).ToList();
+            alldatastart.Reverse();
+            return View(new ModelAdminCassa { Cassa = allcasses, DateTimes = alldatastart});
+            //var allcassesmodel = new ModelAdminCassa { Cassa = allcasses, DateTimes = alldatastart };
+            //return Cassa(allcassesmodel);
+        }      
         #endregion
         #region forCases
 
@@ -358,6 +425,89 @@ namespace VDCompany.Controllers
             var alllawyers = db.Lawyers.ToList();
             return JsonSerializer.Serialize(new { status = "success", CaseLawyers = lawyers, AllLawyers = alllawyers } );
         }
+
+        [HttpPost]
+        public string NewCassa(string name)
+        {
+            if (!Auth())
+                return JsonAnswer.A_NotAuthorized();
+            var alldatastart = db.Cassa.Select(x => x.DateStart.Date == DateTime.Today).FirstOrDefault();
+            if (alldatastart == false)
+            {
+                db.Cassa.Add(new Cassa
+                {
+                    Name = name,
+                    DateStart = DateTime.Now,
+                    DateEnd = DateTime.Now.AddMonths(1),
+                    Operatins = new List<Operatin>(),
+                    Open = 1
+                });
+                db.SaveChanges();
+                var new_id = db.Cassa.Select(f => f.Id).Max();
+                return JsonAnswer.A_NewCassa(new_id);
+            }
+            return "{\"status\":\"error\" }";
+        }
+
+        [HttpPost]
+        public string CloseCassa(int id_cassa)
+        {
+            if (!Auth())
+                return JsonAnswer.A_NotAuthorized();
+
+            var operation = db.Cassa.OrderByDescending(x => x.Id == id_cassa).FirstOrDefault();
+            operation.Open = 0;
+            db.SaveChanges();
+
+            return "{\"status\":\"success\" }";
+        }
+
+        [HttpPost]
+        public string NewOperation(int id_cassa, double amount, OperationType operationtype, string coment, string datap, TimelessType timelesstype)
+        {
+            if (!Auth())
+                return JsonAnswer.A_NotAuthorized();
+            var operation = db.Cassa.OrderByDescending(x => x.Id == id_cassa).FirstOrDefault();
+
+            operation.Operatins.Add(new Operatin
+            {
+                TimelessType = timelesstype,
+                OperationType = operationtype,
+                Coment = coment,
+                Amount = amount,
+                DateAdd = DateTime.Now,
+            });
+            if(timelesstype == TimelessType.Current)
+            {
+                if (operationtype == OperationType.Income)
+                {
+                    operation.IncomeCurrent += amount;
+                }
+                else if (operationtype == OperationType.Сonsumption)
+                {
+                    operation.СonsumptionCurrent += amount;
+                }
+                operation.BalanceCurrent = operation.IncomeCurrent - operation.СonsumptionCurrent;
+            }
+            if (timelesstype == TimelessType.Planing)
+            {
+                if (operationtype == OperationType.Income)
+                {
+                    operation.IncomePlaning += amount;
+                }
+                else if (operationtype == OperationType.Сonsumption)
+                {
+                    operation.СonsumptionPlaning += amount;
+                }
+                operation.BalancePlaning = operation.IncomePlaning - operation.СonsumptionPlaning;
+            }
+            db.SaveChanges();
+            var new_id = db.Cassa.Select(f => f.Id).Max();
+            return JsonAnswer.A_NewOperation(new_id);
+            //return "{\"status\":\"success\", \"data\":\"success added new lawyer\", \"id\":" + new_id + "}";
+        }
+
+
         #endregion
         #region forLawyers
         [HttpPost]

@@ -36,6 +36,14 @@ namespace VDCompany.Controllers
         {
             return "{\"status\":\"success\", \"data\":\"success added new lawyer\", \"id\":" + new_id + "}";
         }
+        public static string A_NewCassa(int new_id)
+        {
+            return "{\"status\":\"success\", \"data\":\"success added new cassa\", \"id\":" + new_id + "}";
+        }        
+        public static string A_NewOperation(int new_id)
+        {
+            return "{\"status\":\"success\", \"data\":\"success added new operation\", \"id\":" + new_id + "}";
+        }
         public static string A_EditLayer_SuccessEditLayer(int id)
         {
             return "{\"status\":\"success\", \"data\":\"success edit lawyer with id = " + id + "\"}";

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AFCStudio.Models.Objects;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,7 @@ namespace VDCompanyMVC.Models.Entitys
         public DbSet<Admin> Admins { get; set; }
         public DbSet<LawyersCases> LawyersCases { get; set; }
         public DbSet<Case> Cases { get; set; }
+        public DbSet<Cassa> Cassa { get; set; }
         public DbSet<Doc> Docs { get; set; }
         public DbSet<Dialog> Dialogs { get; set; }
         public DbSet<Lawyer> Lawyers { get; set; }
@@ -21,7 +23,6 @@ namespace VDCompanyMVC.Models.Entitys
         public DbSet<ImageAdmin> ImageAdmins { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<ServiceVDContacts> Contacts { get; set; }
-        public DbSet<Report> Reports { get; set; }
 
         public StartContext(DbContextOptions options) : base(options)
         {

@@ -14,4 +14,4 @@ VALUES
 INSERT INTO `afcstand`.`admins` 
 (`Login`, `Password`, `Phone`, `Email`, `FIO`, `About`, `HASHPRVT`)
 VALUES 
-('testA', 'testA', '9', 'kostya12277@yandex.ru', 'testA', 'testA', 'a');
+('testA', 'testA', '9', 'testA', 'testA', 'testA', 'a');
