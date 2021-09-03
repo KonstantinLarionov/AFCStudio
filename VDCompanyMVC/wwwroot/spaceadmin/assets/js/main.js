@@ -417,3 +417,15 @@ function billcancel(id) {
         }
     });
 }
+function CreatePriceList() {
+    $.ajax({
+        url: '/Admin/CreatePriceList',
+        method: 'post',
+        data: { status: "create" },
+        success: function (data) {
+            var a = JSON.parse(data);
+            location.reload();
+            alert('Прайслист создан')
+        }
+    });
+}

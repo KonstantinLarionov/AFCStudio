@@ -8,7 +8,7 @@ VALUES
 INSERT INTO `afcstand`.`users` 
 (`Login`, `Name`, `Number`, `RefCode`, `FromeRef`, `Email`, `LASTLOGIN`, `DateReg`, `Password`) 
 VALUES 
-('testU', 'testU', '0', '0', '0', 'kostya12266@mail.ru', '2020-12-12 00:00:00.000000', '2020-12-12 00:00:00.000000', 'testU');
+('testU', 'testU', '0', '0', '0', 'testU', '2020-12-12 00:00:00.000000', '2020-12-12 00:00:00.000000', 'testU');
 
 //Добавление админа
 INSERT INTO `afcstand`.`admins` 

@@ -17,7 +17,7 @@
 
         <div class=" ht-100p d-flex flex-column justify-content-between align-items-center">
             <div class="table-responsive">
-                <table class="table table-primary table-hover table-striped mg-b-0">
+                <table class="table table-bordered table-primary table-striped mg-b-0">
                     <thead>
                         <tr>
                             <th scope="col">Название услуги</th>
@@ -31,16 +31,22 @@
                         {
                             <tr id="@item.Id">
                                 <td>@item.Name</td>
-                                <td>@item.MinPrice</td>
-                                <td>@item.MiddlePrice</td>
-                                <td>@item.MaxPrice</td>
+                                <td onclick="AddService(@item.Id, @item.MinPrice)" id="@item.MinPrice">@item.MinPrice</td>
+                                <td onclick="AddService(@item.Id, @item.MinPrice)" id="@item.MiddlePrice">@item.MiddlePrice</td>
+                                <td onclick="AddService(@item.Id, @item.MinPrice)" id="@item.MaxPrice">@item.MaxPrice</td>
                             </tr>
                         }
                     </tbody>
                 </table>
             </div>
         </div>
-
+        <span style="color: green; ">Стоимость выбранных услуг:  </span>
+        <span id="price">0</span>
+        <div class="col-2">
+            <button type="submit" class="btn btn-outline-primary" style="height: 38px">Выбрать кассу</button>
+        </div>
     </div>
 </div>
+<script src="~/spaceuser/assets/js/Price.js"></script>
+<link rel="stylesheet" href="~/spaceuser/assets/css/Price.css" />
 

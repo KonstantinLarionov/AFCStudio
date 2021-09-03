@@ -83,7 +83,7 @@
                                 {
                                     if (item.TimelessType == TimelessType.Current)
                                     {
-                                        <tr id="@item.Id">
+                                        <tr id="@item.Id" onclick="Del_Op(id)">
                                             <td>@item.Coment</td>
                                             <td>@item.Amount</td>
                                             <td>@item.DateAdd</td>
@@ -160,7 +160,7 @@
                                 {
                                     if (item.TimelessType == TimelessType.Planing)
                                     {
-                                        <tr id="@item.Id">
+                                        <tr id="@item.Id" onclick="Del_Op(id)">
                                             <td>@item.Coment</td>
                                             <td>@item.Amount</td>
                                             <td>@item.DateAdd</td>
@@ -210,14 +210,33 @@
                 </button>
             </div>
             <div class="modal-body">
-
                 <div class="form-group">
                     <label for="name">Название кассы</label>
                     <input type="text" class="form-control" id="name">
-                </div>             
+                </div>
             </div>
             <div class="modal-footer justify-content-between">
                 <button id="newcassa" type="button" class="btn btn-primary tx-13" onclick="New_Cassa()">Добавить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content tx-14">
+            <div class="modal-header">
+                <h6 class="modal-title" id="ModalLabel1">Удаление операции</h6>
+                <button type="button" class="close" onclick="closemodal1()">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <input type="hidden" id="id_operation" value="@Model.Cassa.Id">
+                <input type="hidden" id="isopen" value="@Model.Cassa.Open" />
+                <button id="closemodal" type="button" class="btn btn-primary tx-13" onclick="closemodal1()">Отмена</button>
+                <button id="deleteoperation" type="button" class="btn btn-primary tx-13" onclick="Delete_Operation()">Удалить</button>
             </div>
         </div>
     </div>

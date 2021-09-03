@@ -16,6 +16,7 @@ namespace VDCompanyMVC.Models.Entitys
         public DbSet<LawyersCases> LawyersCases { get; set; }
         public DbSet<Case> Cases { get; set; }
         public DbSet<Cassa> Cassa { get; set; }
+        public DbSet<Price> Price { get; set; }
         public DbSet<Doc> Docs { get; set; }
         public DbSet<Dialog> Dialogs { get; set; }
         public DbSet<Lawyer> Lawyers { get; set; }

@@ -10,8 +10,6 @@ $(function datepi() {
 
 });
 
-
-
 function New_operation() {
     var is_open = document.getElementById("is_open").value;
     if (is_open == 1) {
@@ -43,7 +41,7 @@ function New_operation() {
                     return;
                 }
                 if (a.status == "success") {
-                    var row = '<tr>' +
+                    var row = '<tr onclick="Del_Op(id)">' +
                         '<td scope="row">' + coment + '</td>' +
                         '<td>' + amount + '</td>' +
                         '<td>' + datap + '</td>' +
@@ -116,7 +114,7 @@ function New_operation_planing() {
                     return;
                 }
                 if (a.status == "success") {
-                    var row = '<tr>' +
+                    var row = '<tr onclick="Del_Op(id)">' +
                         '<td scope="row">' + coment + '</td>' +
                         '<td>' + amount + '</td>' +
                         '<td>' + datap + '</td>' +
@@ -215,9 +213,16 @@ function Closecassa() {
             url: '/Admin/CloseCassa',
             method: 'post',
             data: { id_cassa: id_cassa },
-            success: function (data) {               
-                location.reload();
-                alert('Касса закрыта')
+            success: function (data) {
+                var a = JSON.parse(data);
+                if (a.status == "not_authorized") { // слетела сессия, обновим страничку - выкинет на авторизацию
+                window.location.reload();
+                return;
+                }
+                if (a.status == "success") {
+                    location.reload();
+                    alert('Касса закрыта')
+                }
             }
         });
     }
@@ -225,4 +230,50 @@ function Closecassa() {
         alert("Касса уже закрыта")
     }
 }
+
+function closemodal1() {
+    id_case = 0;
+    $('#modal1').modal('hide');
+}
+
+function Del_Op(item, isopen) {
+    $('#ModalLabel1').text('Удаление операции');
+    $('#id_operation').text(item);
+    $('#isopen').text(isopen);
+    $('#closemodal').show();
+    $('#deleteoperation').show();
+    $('#modal1').modal('show');
+}
+
+function Delete_Operation() {
+    var operation = document.getElementById("id_operation").innerText;
+    var cassa = document.getElementById("id_operation").value;
+    var is_open = document.getElementById("isopen").value;
+    if (is_open == 1) {
+        if (operation == '') {
+            alert('презагрузите страницу чтобы удалить операцию')
+        }
+        else {
+            $.ajax({
+                url: '/Admin/DeleteOperation',
+                method: 'post',
+                data: { cassa: cassa, operation: operation },
+                success: function (data) {
+                    var a = JSON.parse(data);
+                    if (a.status == "not_authorized") { // слетела сессия, обновим страничку - выкинет на авторизацию
+                        window.location.reload();
+                        return;
+                    }
+                    if (a.status == "success") {
+                        location.reload();
+                    }
+                }
+            });
+        }
+    }
+    else {
+        alert('Касса закрыта вы не можете удалить операции')
+    }
+}
+
 

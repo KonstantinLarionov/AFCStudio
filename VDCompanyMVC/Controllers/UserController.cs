@@ -365,22 +365,23 @@ namespace VDCompany.Controllers
         {
             if (!Auth())
                 return RedirectToRoute(new { controller = "User", action = "Login" });
-            List<Price> prices = new List<Price>
-            {
-                new Price { Id = 0, Name = "Продвижениев Яндекс поисковике", MinPrice = 1900, MiddlePrice = 5200, MaxPrice = 15000 },
-                new Price { Id = 1, Name = "Продвижениев Гугл поисковике", MinPrice = 1450, MiddlePrice = 4600, MaxPrice = 15000 },
-                new Price { Id = 2, Name = "SEO продвижение", MinPrice = 1000, MiddlePrice = 2900, MaxPrice = 6000 },
-                new Price { Id = 3, Name = "Покупка ссылок на сторонних ресурсах", MinPrice = 300, MiddlePrice = 1500, MaxPrice = 3000 },
-                new Price { Id = 4, Name = "Ведение группы ВК, Facebook", MinPrice = 600, MiddlePrice = 2400, MaxPrice = 6000 },
-                new Price { Id = 4, Name = "Ведение Instagram", MinPrice = 360, MiddlePrice = 1800, MaxPrice = 5400 },
-                new Price { Id = 5, Name = "Ведение и наполнение сайта", MinPrice = 660, MiddlePrice = 3000, MaxPrice = 6600 },
-                new Price { Id = 6, Name = "Разовое оформление группы ВК, Facebook", MinPrice = 840, MiddlePrice = 2640, MaxPrice = 6600 },
-                new Price { Id = 7, Name = "Разовое оформление Instagram", MinPrice = 960, MiddlePrice = 3240, MaxPrice = 6600 },
-                new Price { Id = 8, Name = "Разработка контент-плана Instagram", MinPrice = 1200, MiddlePrice = 3600, MaxPrice = 12000 },
-                new Price { Id = 9, Name = "Разработка контент-плана ВК, Facebook", MinPrice = 1200, MiddlePrice = 3600, MaxPrice = 12000 },
-                new Price { Id = 10, Name = "Разработка Логотипа и баннера", MinPrice = 3600, MiddlePrice = 9600, MaxPrice = 16800 },
-                new Price { Id = 11, Name = "Разработка бренд-бука", MinPrice = 9600, MiddlePrice = 16800, MaxPrice = 36000 },
-            };
+            List<Price> prices = db.Price.ToList();
+            //List<Price> prices = new List<Price>
+            //{
+            //    new Price { Id = 0, Name = "Продвижениев Яндекс поисковике", MinPrice = 1900, MiddlePrice = 5200, MaxPrice = 15000 },
+            //    new Price { Id = 1, Name = "Продвижениев Гугл поисковике", MinPrice = 1450, MiddlePrice = 4600, MaxPrice = 15000 },
+            //    new Price { Id = 2, Name = "SEO продвижение", MinPrice = 1000, MiddlePrice = 2900, MaxPrice = 6000 },
+            //    new Price { Id = 3, Name = "Покупка ссылок на сторонних ресурсах", MinPrice = 300, MiddlePrice = 1500, MaxPrice = 3000 },
+            //    new Price { Id = 4, Name = "Ведение группы ВК, Facebook", MinPrice = 600, MiddlePrice = 2400, MaxPrice = 6000 },
+            //    new Price { Id = 4, Name = "Ведение Instagram", MinPrice = 360, MiddlePrice = 1800, MaxPrice = 5400 },
+            //    new Price { Id = 5, Name = "Ведение и наполнение сайта", MinPrice = 660, MiddlePrice = 3000, MaxPrice = 6600 },
+            //    new Price { Id = 6, Name = "Разовое оформление группы ВК, Facebook", MinPrice = 840, MiddlePrice = 2640, MaxPrice = 6600 },
+            //    new Price { Id = 7, Name = "Разовое оформление Instagram", MinPrice = 960, MiddlePrice = 3240, MaxPrice = 6600 },
+            //    new Price { Id = 8, Name = "Разработка контент-плана Instagram", MinPrice = 1200, MiddlePrice = 3600, MaxPrice = 12000 },
+            //    new Price { Id = 9, Name = "Разработка контент-плана ВК, Facebook", MinPrice = 1200, MiddlePrice = 3600, MaxPrice = 12000 },
+            //    new Price { Id = 10, Name = "Разработка Логотипа и баннера", MinPrice = 3600, MiddlePrice = 9600, MaxPrice = 16800 },
+            //    new Price { Id = 11, Name = "Разработка бренд-бука", MinPrice = 9600, MiddlePrice = 16800, MaxPrice = 36000 },
+            //};
             
             var model = new ModelUserPrice
             {

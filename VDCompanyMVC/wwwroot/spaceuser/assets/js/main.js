@@ -113,3 +113,4 @@ function addmessage(user, message, date) {
 function chatclear() {
     $('.chat-group').empty();
 }
+
