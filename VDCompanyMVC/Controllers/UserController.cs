@@ -17,6 +17,7 @@ using System.IO;
 using VDCompanyMVC;
 using AFCStudio.Models.Helpers;
 using AFCStudio.Models.Objects;
+using AFCStudio.Models.DTO;
 
 namespace VDCompany.Controllers
 {
@@ -38,6 +39,8 @@ namespace VDCompany.Controllers
             { "mp4", TypeDoc.VIDEO},
         };
         #endregion
+
+
         #region AUTHLOGIN
         private static readonly StartContext db = new StartContext(new DbContextOptions<StartContext>());
         private (string login, string password) userinfo = (null, null);
@@ -408,7 +411,7 @@ namespace VDCompany.Controllers
         }*/
 
         [HttpPost]
-        public String CreateService(object[] filtered)
+        public String CreateService(List<GetClientPrice> filtered)
         {
             /*
             for(int i = 0; i < filtered.Length; i++)

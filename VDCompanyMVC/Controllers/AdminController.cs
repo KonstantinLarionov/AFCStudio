@@ -365,19 +365,31 @@ namespace VDCompany.Controllers
         [HttpPost]
         public string CreatePriceList (string status)
         {
-            db.Price.Add(new Price { Id = 0, Name = "Продвижениев Яндекс поисковике", MinPrice = 1900, MiddlePrice = 5200, MaxPrice = 15000 });
-            db.Price.Add(new Price { Id = 1, Name = "Продвижениев Гугл поисковике", MinPrice = 1450, MiddlePrice = 4600, MaxPrice = 15000 });
-            db.Price.Add(new Price { Id = 2, Name = "SEO продвижение", MinPrice = 1000, MiddlePrice = 2900, MaxPrice = 6000 });
-            db.Price.Add(new Price { Id = 3, Name = "Покупка ссылок на сторонних ресурсах", MinPrice = 300, MiddlePrice = 1500, MaxPrice = 3000 });
-            db.Price.Add(new Price { Id = 4, Name = "Ведение группы ВК, Facebook", MinPrice = 600, MiddlePrice = 2400, MaxPrice = 6000 });
-            db.Price.Add(new Price { Id = 4, Name = "Ведение Instagram", MinPrice = 360, MiddlePrice = 1800, MaxPrice = 5400 });
-            db.Price.Add(new Price { Id = 5, Name = "Ведение и наполнение сайта", MinPrice = 660, MiddlePrice = 3000, MaxPrice = 6600 });
-            db.Price.Add(new Price { Id = 6, Name = "Разовое оформление группы ВК, Facebook", MinPrice = 840, MiddlePrice = 2640, MaxPrice = 6600 });
-            db.Price.Add(new Price { Id = 7, Name = "Разовое оформление Instagram", MinPrice = 960, MiddlePrice = 3240, MaxPrice = 6600 });
-            db.Price.Add(new Price { Id = 8, Name = "Разработка контент-плана Instagram", MinPrice = 1200, MiddlePrice = 3600, MaxPrice = 12000 });
-            db.Price.Add(new Price { Id = 9, Name = "Разработка контент-плана ВК, Facebook", MinPrice = 1200, MiddlePrice = 3600, MaxPrice = 12000 });
-            db.Price.Add(new Price { Id = 10, Name = "Разработка Логотипа и баннера", MinPrice = 3600, MiddlePrice = 9600, MaxPrice = 16800 });
-            db.Price.Add(new Price { Id = 11, Name = "Разработка бренд-бука", MinPrice = 9600, MiddlePrice = 16800, MaxPrice = 36000 });
+            db.Price.Add(new Price { Name = "Продвижение в Яндекс поисковике", MinPrice = 1900, MiddlePrice = 5200, MaxPrice = 15000 });
+            db.SaveChanges();
+            db.Price.Add(new Price { Name = "Продвижение в Гугл поисковике", MinPrice = 1450, MiddlePrice = 4600, MaxPrice = 15000 });
+            db.SaveChanges();
+            db.Price.Add(new Price { Name = "SEO продвижение", MinPrice = 1000, MiddlePrice = 2900, MaxPrice = 6000 });
+            db.SaveChanges();
+            db.Price.Add(new Price { Name = "Покупка ссылок на сторонних ресурсах", MinPrice = 300, MiddlePrice = 1500, MaxPrice = 3000 });
+            db.SaveChanges();
+            db.Price.Add(new Price { Name = "Ведение группы ВК, Facebook", MinPrice = 600, MiddlePrice = 2400, MaxPrice = 6000 });
+            db.SaveChanges();
+            db.Price.Add(new Price { Name = "Ведение Instagram", MinPrice = 360, MiddlePrice = 1800, MaxPrice = 5400 });
+            db.SaveChanges();
+            db.Price.Add(new Price { Name = "Ведение и наполнение сайта", MinPrice = 660, MiddlePrice = 3000, MaxPrice = 6600 });
+            db.SaveChanges();
+            db.Price.Add(new Price { Name = "Разовое оформление группы ВК, Facebook", MinPrice = 840, MiddlePrice = 2640, MaxPrice = 6600 });
+            db.SaveChanges();
+            db.Price.Add(new Price { Name = "Разовое оформление Instagram", MinPrice = 960, MiddlePrice = 3240, MaxPrice = 6600 });
+            db.SaveChanges();
+            db.Price.Add(new Price { Name = "Разработка контент-плана Instagram", MinPrice = 1200, MiddlePrice = 3600, MaxPrice = 12000 });
+            db.SaveChanges();
+            db.Price.Add(new Price { Name = "Разработка контент-плана ВК, Facebook", MinPrice = 1200, MiddlePrice = 3600, MaxPrice = 12000 });
+            db.SaveChanges();
+            db.Price.Add(new Price { Name = "Разработка Логотипа и баннера", MinPrice = 3600, MiddlePrice = 9600, MaxPrice = 16800 });
+            db.SaveChanges();
+            db.Price.Add(new Price { Name = "Разработка бренд-бука", MinPrice = 9600, MiddlePrice = 16800, MaxPrice = 36000 });
             db.SaveChanges();
             return "{\"status\":\"success\"}";
         }
@@ -524,6 +536,85 @@ namespace VDCompany.Controllers
             return JsonAnswer.A_NewOperation(new_id);
             //return "{\"status\":\"success\", \"data\":\"success added new lawyer\", \"id\":" + new_id + "}";
         }        
+        
+        [HttpPost]
+        public string ChangeOperation(int cassa, int operation, double amount_c, OperationType operationtype_c, string coment_c)
+        {
+           
+            if (!Auth())
+                return JsonAnswer.A_NotAuthorized();
+            var _cassa = db.Cassa.OrderByDescending(x => x.Id == cassa).Include(x => x.Operatins).FirstOrDefault();
+
+            var _operation = _cassa.Operatins.Where(x => x.Id == operation).FirstOrDefault();
+
+            double old_amount = _operation.Amount;
+            OperationType oldoperationtype = _operation.OperationType;
+
+            if (amount_c != 0)//исключение изменить сумму на 0 не возможно да кого это ебет
+            {
+                _operation.Amount = amount_c;
+            }
+            if(operationtype_c != OperationType.None)
+            {
+                _operation.OperationType = operationtype_c;
+            }
+            if(coment_c != null)
+            {
+                _operation.Coment = coment_c;
+            }
+
+            if (_operation.TimelessType == TimelessType.Current )
+            {
+                if (_operation.OperationType == OperationType.Income )
+                {
+                    var income = _cassa.Operatins.Where(x => x.OperationType == OperationType.Income && x.TimelessType == TimelessType.Current).ToArray();
+                    _cassa.IncomeCurrent = 0;
+                    for (int i = 0; i < income.Length; i++)
+                    {
+                        _cassa.IncomeCurrent += income[i].Amount;
+                    }
+                }
+                else if (_operation.OperationType == OperationType.Сonsumption)
+                {
+                    var income = _cassa.Operatins.Where(x => x.OperationType == OperationType.Сonsumption && x.TimelessType == TimelessType.Current).ToArray();
+                    _cassa.СonsumptionCurrent = 0;
+                    for (int i = 0; i < income.Length; i++)
+                    {
+                        _cassa.СonsumptionCurrent += income[i].Amount;
+                    }
+                }
+                _cassa.BalanceCurrent = _cassa.IncomeCurrent - _cassa.СonsumptionCurrent;
+            }
+            else if (_operation.TimelessType == TimelessType.Planing)
+            {
+                if (_operation.OperationType == OperationType.Income)
+                {
+                    var income = _cassa.Operatins.Where(x => x.OperationType == OperationType.Income && x.TimelessType == TimelessType.Planing).ToArray();
+                    _cassa.IncomePlaning = 0;
+                    for (int i = 0; i < income.Length; i++)
+                    {
+                        _cassa.IncomePlaning += income[i].Amount;
+                    }
+
+                }
+                else if (_operation.OperationType == OperationType.Сonsumption)
+                {
+                    var income = _cassa.Operatins.Where(x => x.OperationType == OperationType.Сonsumption && x.TimelessType == TimelessType.Planing).ToArray();
+                    _cassa.СonsumptionPlaning = 0;
+                    for (int i = 0; i < income.Length; i++)
+                    {
+                        _cassa.СonsumptionPlaning += income[i].Amount;
+                    }
+                }
+                _cassa.BalancePlaning = _cassa.IncomePlaning - _cassa.СonsumptionPlaning;
+            }
+
+            db.SaveChanges();
+            var new_id = db.Cassa.Select(f => f.Id).Max();
+            return JsonAnswer.A_NewOperation(new_id);
+            //return "{\"status\":\"success\", \"data\":\"success added new lawyer\", \"id\":" + new_id + "}";
+        }    
+        
         [HttpPost]
         public string DeleteOperation(int cassa, int operation)
         {
@@ -562,6 +653,57 @@ namespace VDCompany.Controllers
                 _cassa.BalancePlaning = _cassa.IncomePlaning - _cassa.СonsumptionPlaning;
             }
             _cassa.Operatins.RemoveAll(x => x.Id == operation);
+            db.SaveChanges();
+            var new_id = db.Cassa.Select(f => f.Id).Max();
+            return JsonAnswer.A_NewOperation(new_id);
+            //return "{\"status\":\"success\", \"data\":\"success added new lawyer\", \"id\":" + new_id + "}";
+        }        
+        
+        [HttpPost]
+        public string ChangeTypeOperation(int cassa, int operation)
+        {
+            if (!Auth())
+                return JsonAnswer.A_NotAuthorized();
+
+            //int id_c = id_cassa.ToInt();
+            //int id_o = id_operation.ToInt();
+
+            var _cassa = db.Cassa.OrderByDescending(x => x.Id == cassa).Include(x => x.Operatins).FirstOrDefault();
+
+            var _operation = _cassa.Operatins.Where(x => x.Id == operation).FirstOrDefault();
+            
+            if(_operation.TimelessType == TimelessType.Current)
+            {
+                if (_operation.OperationType == OperationType.Income)
+                {
+                    _cassa.IncomeCurrent -= _operation.Amount;
+                    _cassa.IncomePlaning += _operation.Amount;
+                }
+                else if (_operation.OperationType == OperationType.Сonsumption)
+                {
+                    _cassa.СonsumptionCurrent -= _operation.Amount;
+                    _cassa.СonsumptionPlaning += _operation.Amount;
+                }
+                _cassa.BalanceCurrent = _cassa.IncomeCurrent - _cassa.СonsumptionCurrent;
+                _cassa.BalancePlaning = _cassa.IncomePlaning - _cassa.СonsumptionPlaning;
+                _operation.TimelessType = TimelessType.Planing;
+            }
+            else if (_operation.TimelessType == TimelessType.Planing)
+            {
+                if (_operation.OperationType == OperationType.Income)
+                {
+                    _cassa.IncomePlaning -= _operation.Amount;
+                    _cassa.IncomeCurrent += _operation.Amount;
+                }
+                else if (_operation.OperationType == OperationType.Сonsumption)
+                {
+                    _cassa.СonsumptionPlaning -= _operation.Amount;
+                    _cassa.СonsumptionCurrent += _operation.Amount;
+                }
+                _cassa.BalancePlaning = _cassa.IncomePlaning - _cassa.СonsumptionPlaning;
+                _cassa.BalanceCurrent = _cassa.IncomeCurrent - _cassa.СonsumptionCurrent;
+                _operation.TimelessType = TimelessType.Current;
+            }
             db.SaveChanges();
             var new_id = db.Cassa.Select(f => f.Id).Max();
             return JsonAnswer.A_NewOperation(new_id);

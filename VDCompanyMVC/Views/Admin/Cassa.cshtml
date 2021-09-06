@@ -227,16 +227,34 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content tx-14">
             <div class="modal-header">
-                <h6 class="modal-title" id="ModalLabel1">Удаление операции</h6>
+                <h6 class="modal-title" id="ModalLabel1">Изменение операции</h6>
                 <button type="button" class="close" onclick="closemodal1()">
                     <span aria-hidden="true">×</span>
                 </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="coment_c">Название кассы</label>
+                    <input type="text" class="form-control" id="coment_c">
+                    <label for="amount_c">Сумма</label>
+                    <input type="text" class="form-control" id="amount_c">
+                    <label>Тип операции</label>
+                    <div class="wd-100" data-select2-id="29">
+                        <select class="form-control select2-no-search select2-hidden-accessible" id="operationtype_c">
+                            <option value="0" data-select2-id="30">Не выбрано</option>
+                            <option value="1" data-select2-id="31">Приход</option>
+                            <option value="2" data-select2-id="32">Уход</option>
+                        </select>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer justify-content-between">
                 <input type="hidden" id="id_operation" value="@Model.Cassa.Id">
                 <input type="hidden" id="isopen" value="@Model.Cassa.Open" />
                 <button id="closemodal" type="button" class="btn btn-primary tx-13" onclick="closemodal1()">Отмена</button>
-                <button id="deleteoperation" type="button" class="btn btn-primary tx-13" onclick="Delete_Operation()">Удалить</button>
+                <button id="closemodal" type="button" class="btn btn-primary tx-13" onclick="Change_Operation()">Изменить</button>
+                <button id="closemodal" type="button" class="btn btn-primary tx-13" onclick="Change_Type_Operation()">Изменить тип операции</button>
+                <button id="deleteoperation" type="button" class="btn btn-primary ql-color-red tx-13" onclick="Delete_Operation()">Удалить</button>
             </div>
         </div>
     </div>

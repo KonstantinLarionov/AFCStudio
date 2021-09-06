@@ -276,4 +276,70 @@ function Delete_Operation() {
     }
 }
 
+function Change_Operation() {
+    var operation = document.getElementById("id_operation").innerText;
+    var cassa = document.getElementById("id_operation").value;
+    var is_open = document.getElementById("isopen").value;
+    if (is_open == 1) {
+        if (operation == '') {
+            alert('презагрузите страницу чтобы изменить операцию')
+        }
+        else {
+            var amount_c = document.getElementById("amount_c").value;
+            var coment_c = document.getElementById("coment_c").value;
+            var operationtype_c = document.getElementById("operationtype_c").value
+            $.ajax({
+                url: '/Admin/ChangeOperation',
+                method: 'post',
+                data: { cassa: cassa, operation: operation, amount_c: amount_c, operationtype_c: operationtype_c, coment_c: coment_c },
+                
+                success: function (data) {
+                    var a = JSON.parse(data);
+                    if (a.status == "not_authorized") { // слетела сессия, обновим страничку - выкинет на авторизацию
+                        window.location.reload();
+                        return;
+                    }
+                    if (a.status == "success") {
+                        location.reload();
+                    }
+                }
+            });
+        }
+    }
+    else {
+        alert('Касса закрыта вы не можете удалить операции')
+    }
+}
+
+function Change_Type_Operation() {
+    var operation = document.getElementById("id_operation").innerText;
+    var cassa = document.getElementById("id_operation").value;
+    var is_open = document.getElementById("isopen").value;
+    if (is_open == 1) {
+        if (operation == '') {
+            alert('презагрузите страницу чтобы изменить тип операции')
+        }
+        else {
+            $.ajax({
+                url: '/Admin/ChangeTypeOperation',
+                method: 'post',
+                data: { cassa: cassa, operation: operation },
+                success: function (data) {
+                    var a = JSON.parse(data);
+                    if (a.status == "not_authorized") { // слетела сессия, обновим страничку - выкинет на авторизацию
+                        window.location.reload();
+                        return;
+                    }
+                    if (a.status == "success") {
+                        location.reload();
+                    }
+                }
+            });
+        }
+    }
+    else {
+        alert('Касса закрыта вы не можете удалить операции')
+    }
+}
+
 
