@@ -34,5 +34,25 @@ function AddService(id_op, price) {
     document.querySelector('#price').innerHTML = priceall;
     console.log(filtered);
 }
+function CreateService() {
+    var filtered = servicearr.filter(function (el) {
+        return el != null;
+    });
+    $.ajax({
+        url: '/User/CreateService',
+        method: 'post',
+        data: { filtered: filtered },
+        success: function (data) {
+            var a = JSON.parse(data);
+            if (a.status == "not_authorized") { // слетела сессия, обновим страничку - выкинет на авторизацию
+                window.location.reload();
+                return;
+            }
+            if (a.status == "success") {               
+                location.reload();
+            }
+        },
+    });
+}
 
 

@@ -406,6 +406,22 @@ namespace VDCompany.Controllers
         {
             return HttpContext.SendToUser(u => u.GetLawyers());
         }*/
+
+        [HttpPost]
+        public String CreateService(object[] filtered)
+        {
+            /*
+            for(int i = 0; i < filtered.Length; i++)
+            {
+                Json
+                object helper = filtered[i];
+                db.Price.Where(x => x.Id = )
+
+
+            }*/
+            return "";
+        }
+
         #region Helpers
         private string GetHash(string data, int length = 0)
         {
