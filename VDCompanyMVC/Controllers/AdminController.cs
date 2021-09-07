@@ -562,50 +562,37 @@ namespace VDCompany.Controllers
             {
                 _operation.Coment = coment_c;
             }
-
+            
             if (_operation.TimelessType == TimelessType.Current )
             {
-                if (_operation.OperationType == OperationType.Income )
+                var income = _cassa.Operatins.Where(x => x.OperationType == OperationType.Income && x.TimelessType == TimelessType.Current).ToArray();
+                _cassa.IncomeCurrent = 0;
+                var consumption = _cassa.Operatins.Where(x => x.OperationType == OperationType.Сonsumption && x.TimelessType == TimelessType.Current).ToArray();
+                _cassa.СonsumptionCurrent = 0;
+                for (int i = 0; i < income.Length; i++)
                 {
-                    var income = _cassa.Operatins.Where(x => x.OperationType == OperationType.Income && x.TimelessType == TimelessType.Current).ToArray();
-                    _cassa.IncomeCurrent = 0;
-                    for (int i = 0; i < income.Length; i++)
-                    {
-                        _cassa.IncomeCurrent += income[i].Amount;
-                    }
+                    _cassa.IncomeCurrent += income[i].Amount;
                 }
-                else if (_operation.OperationType == OperationType.Сonsumption)
+                for (int i = 0; i < consumption.Length; i++)
                 {
-                    var income = _cassa.Operatins.Where(x => x.OperationType == OperationType.Сonsumption && x.TimelessType == TimelessType.Current).ToArray();
-                    _cassa.СonsumptionCurrent = 0;
-                    for (int i = 0; i < income.Length; i++)
-                    {
-                        _cassa.СonsumptionCurrent += income[i].Amount;
-                    }
+                    _cassa.СonsumptionCurrent += consumption[i].Amount;
                 }
                 _cassa.BalanceCurrent = _cassa.IncomeCurrent - _cassa.СonsumptionCurrent;
             }
             else if (_operation.TimelessType == TimelessType.Planing)
             {
-                if (_operation.OperationType == OperationType.Income)
+                var income = _cassa.Operatins.Where(x => x.OperationType == OperationType.Income && x.TimelessType == TimelessType.Planing).ToArray();
+                _cassa.IncomePlaning = 0;
+                var consumption = _cassa.Operatins.Where(x => x.OperationType == OperationType.Сonsumption && x.TimelessType == TimelessType.Planing).ToArray();
+                _cassa.СonsumptionPlaning = 0;
+                for (int i = 0; i < income.Length; i++)
                 {
-                    var income = _cassa.Operatins.Where(x => x.OperationType == OperationType.Income && x.TimelessType == TimelessType.Planing).ToArray();
-                    _cassa.IncomePlaning = 0;
-                    for (int i = 0; i < income.Length; i++)
-                    {
-                        _cassa.IncomePlaning += income[i].Amount;
-                    }
-
+                    _cassa.IncomePlaning += income[i].Amount;
                 }
-                else if (_operation.OperationType == OperationType.Сonsumption)
+                for (int i = 0; i < consumption.Length; i++)
                 {
-                    var income = _cassa.Operatins.Where(x => x.OperationType == OperationType.Сonsumption && x.TimelessType == TimelessType.Planing).ToArray();
-                    _cassa.СonsumptionPlaning = 0;
-                    for (int i = 0; i < income.Length; i++)
-                    {
-                        _cassa.СonsumptionPlaning += income[i].Amount;
-                    }
-                }
+                    _cassa.СonsumptionPlaning += consumption[i].Amount;
+                }              
                 _cassa.BalancePlaning = _cassa.IncomePlaning - _cassa.СonsumptionPlaning;
             }
 
