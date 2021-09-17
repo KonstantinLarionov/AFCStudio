@@ -33,7 +33,7 @@
                                 }
                             </select>
                         </div>
-                        <div class="col-2">
+                        <div class="col-2" >
                             <button type="submit" class="btn btn-outline-primary" style="height: 38px">Выбрать кассу</button>
                         </div>
                         <div class="col-4"></div>
@@ -41,8 +41,8 @@
                 </form>
             </div>
         </div>
-        <div style="width: 100%; display: flex; justify-content: space-around ">
-            <div style="width: 50%; ">
+        <div style="width: 100%; display: flex; justify-content: space-between ">
+            <div style="width: 100%; ">
                 <div style="height: 50px; width: 100%; display: flex; flex-wrap: wrap; justify-content: space-around; padding: 0px 0px 20px 0px ">
 
                     <input type="text" class="form-control bd-0 wd-100" placeholder="Сумма" id="amount">
@@ -59,7 +59,7 @@
 
                     <form class="wd-100" style="height: 38px">
                         <div class="wd-100" style="height: 38px">
-                            <input class="wd-100" style="height: 38px" id="datep" onclick="datep()" />
+                            <input class="wd-100" type="date" style="height: 38px" id="dateleft" onclick="datep()" />
                         </div>
                     </form>
 
@@ -119,8 +119,8 @@
                 </div>
             </div>
             <div style="width: 10px;"></div>
-            <div style="width: 50%;">
-                <div style="height: 50px; width: 100%; display: flex; flex-wrap: wrap; justify-content: space-around; padding: 0px 0px 20px 0px ">
+            <div style="width: 100%;">
+                <div style="height: 50px; width: 100%; display: flex; flex-wrap: wrap; justify-content: space-between; padding: 0px 0px 20px 0px ">
 
                     <input type="text" class="form-control bd-0 wd-100" placeholder="Amount" id="amount_planing">
 
@@ -136,7 +136,8 @@
 
                     <form class="wd-100" style="height: 38px">
                         <div class="wd-100" style="height: 38px">
-                            <input class="wd-100" style="height: 38px" id="datepi" onclick="datepi()" />
+                            <input class="wd-100" type="date" style="height: 38px" id="dateright" name="date"  onclick="datepi()" />
+                          
                         </div>
                     </form>
 
