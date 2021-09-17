@@ -15,7 +15,7 @@ function New_operation() {
     if (is_open == 1) {
 
         var id_cassa = document.getElementById("id_cassa").value;
-        var datap = document.getElementById("datep").value;
+        var datap = document.getElementById("dateleft").value;
         var amount = document.getElementById("amount").value;
         var coment = document.getElementById("coment").value;
         var operationtype = document.getElementById("operationtype").value;
@@ -88,7 +88,7 @@ function New_operation_planing() {
     if (is_open == 1) {
 
         var id_cassa = document.getElementById("id_cassa").value;
-        var datap = document.getElementById("datepi").value;
+        var datap = document.getElementById("dateright").value;
         var amount = document.getElementById("amount_planing").value;
         var coment = document.getElementById("coment_planing").value;
         var operationtype = document.getElementById("operationtype_planing").value;

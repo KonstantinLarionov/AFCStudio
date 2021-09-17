@@ -493,7 +493,7 @@ namespace VDCompany.Controllers
         }
 
         [HttpPost]
-        public string NewOperation(int id_cassa, double amount, OperationType operationtype, string coment, string datap, TimelessType timelesstype)
+        public string NewOperation(int id_cassa, double amount, OperationType operationtype, string coment, DateTime datap, TimelessType timelesstype)
         {
             if (!Auth())
                 return JsonAnswer.A_NotAuthorized();
@@ -505,7 +505,8 @@ namespace VDCompany.Controllers
                 OperationType = operationtype,
                 Coment = coment,
                 Amount = amount,
-                DateAdd = DateTime.Now,
+                DateAdd = datap,
+               
             });
             if(timelesstype == TimelessType.Current)
             {
@@ -531,6 +532,7 @@ namespace VDCompany.Controllers
                 }
                 cassa.BalancePlaning = cassa.IncomePlaning - cassa.СonsumptionPlaning;
             }
+            db.RemoveRange();
             db.SaveChanges();
             var new_id = db.Cassa.Select(f => f.Id).Max();
             return JsonAnswer.A_NewOperation(new_id);
