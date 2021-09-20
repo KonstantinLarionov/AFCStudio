@@ -532,7 +532,7 @@ namespace VDCompany.Controllers
                 }
                 cassa.BalancePlaning = cassa.IncomePlaning - cassa.СonsumptionPlaning;
             }
-            db.RemoveRange();
+           
             db.SaveChanges();
             var new_id = db.Cassa.Select(f => f.Id).Max();
             return JsonAnswer.A_NewOperation(new_id);
