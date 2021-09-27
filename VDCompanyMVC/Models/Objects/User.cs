@@ -1,7 +1,9 @@
-﻿using System;
+﻿using AFCStudio.Models.DTO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
 
 namespace VDCompanyMVC.Models.Objects
 {
@@ -18,7 +20,11 @@ namespace VDCompanyMVC.Models.Objects
         public DateTime LASTLOGIN { get; set; }
         public DateTime DateReg { get; set; }
         public string Password { get; set; }
+
+        public List<GetClientPrice> GetClientPrice { get; set; } = new List<GetClientPrice>();
         public List<Case> Cases { get; set; } = new List<Case>();
         public List<Bill> Bills { get; set; } = new List<Bill>();
+       
+
     }
 }

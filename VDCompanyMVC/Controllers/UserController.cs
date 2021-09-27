@@ -318,7 +318,7 @@ namespace VDCompany.Controllers
                 return RedirectToRoute(new { controller = "User", action = "Login" });
             return View();
         }
-        [HttpPost]
+             [HttpPost]
         public string CreateCase([FromBody] CaseDTO newcase)
         {
             if (!Auth())
@@ -411,17 +411,13 @@ namespace VDCompany.Controllers
         }*/
 
         [HttpPost]
-        public String CreateService(List<GetClientPrice> filtered)
+        public string CreateService(List<GetClientPrice> filtered)
         {
-            /*
-            for(int i = 0; i < filtered.Length; i++)
-            {
-                Json
-                object helper = filtered[i];
-                db.Price.Where(x => x.Id = )
+            if (!Auth())
+                return JsonAnswer.U_Unauthorized();
 
 
-            }*/
+
             return "";
         }
 

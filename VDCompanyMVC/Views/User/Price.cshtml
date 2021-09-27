@@ -31,22 +31,44 @@
                         {
                             <tr id="@item.Id">
                                 <td>@item.Name</td>
-                                <td onclick="AddService(@item.Id, @item.MinPrice)" id="@item.MinPrice">@item.MinPrice</td>
-                                <td onclick="AddService(@item.Id, @item.MinPrice)" id="@item.MiddlePrice">@item.MiddlePrice</td>
-                                <td onclick="AddService(@item.Id, @item.MinPrice)" id="@item.MaxPrice">@item.MaxPrice</td>
+                                <td onclick="AddService(@item.Id, @item.MinPrice, '@item.Name')" id="@item.MinPrice">@item.MinPrice</td>
+                                <td onclick="AddService(@item.Id, @item.MiddlePrice, '@item.Name')" id="@item.MiddlePrice">@item.MiddlePrice</td>
+                                <td onclick="AddService(@item.Id, @item.MaxPrice, '@item.Name')" id="@item.MaxPrice">@item.MaxPrice</td>
                             </tr>
                         }
                     </tbody>
                 </table>
             </div>
         </div>
-        <span style="color: green; ">Стоимость выбранных услуг:  </span>
-        <span id="price">0</span>
-        <div class="col-2">
-            <button class="btn btn-outline-primary" style="height: 38px" onclick="CreateService()">Заказать выбранные услуги</button>
-        </div>
+        <button class="btn btn-outline-primary button"  id="click_button">
+            Сохранить
+        </button>
+
+
+
+
+        <table class="table table-bordered table-primary table-striped mg-b-0" style="visibility:hidden;" id="table">
+            <tr>
+                <th>
+                    Услуги
+                </th>
+                <th>
+                    Цена
+                </th>
+            </tr>
+        </table>
+
+
+        <button  class="btn btn-outline-primary buttonpay"  id="buttonhidden">Оплатить</button>
+        <span class="price_all" id="price"></span>
+        <div id="text"></div>
+        <button class="btn btn-outline-primary buttonpay" onclick="CreateService()" >Я оплатил </button>
+
+        
     </div>
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="~/spaceuser/assets/js/Price.js"></script>
+
 <link rel="stylesheet" href="~/spaceuser/assets/css/Price.css" />
 

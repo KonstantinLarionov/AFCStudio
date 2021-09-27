@@ -7,20 +7,28 @@
 
   <ItemGroup>
     <Compile Remove="wwwroot\spacehome\assets\images\Новая папка\**" />
+    <Compile Remove="wwwroot\spaceuser\assets\js\Новая папка\**" />
     <Compile Remove="wwwroot\Новая папка1\**" />
     <Compile Remove="wwwroot\Новая папка\**" />
     <Content Remove="wwwroot\spacehome\assets\images\Новая папка\**" />
+    <Content Remove="wwwroot\spaceuser\assets\js\Новая папка\**" />
     <Content Remove="wwwroot\Новая папка1\**" />
     <Content Remove="wwwroot\Новая папка\**" />
     <EmbeddedResource Remove="wwwroot\spacehome\assets\images\Новая папка\**" />
+    <EmbeddedResource Remove="wwwroot\spaceuser\assets\js\Новая папка\**" />
     <EmbeddedResource Remove="wwwroot\Новая папка1\**" />
     <EmbeddedResource Remove="wwwroot\Новая папка\**" />
     <EntityDeploy Remove="wwwroot\spacehome\assets\images\Новая папка\**" />
     <EntityDeploy Remove="wwwroot\Новая папка1\**" />
     <EntityDeploy Remove="wwwroot\Новая папка\**" />
     <None Remove="wwwroot\spacehome\assets\images\Новая папка\**" />
+    <None Remove="wwwroot\spaceuser\assets\js\Новая папка\**" />
     <None Remove="wwwroot\Новая папка1\**" />
     <None Remove="wwwroot\Новая папка\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\spaceuser\assets\js\JavaScript.js" />
   </ItemGroup>
 
   <ItemGroup>

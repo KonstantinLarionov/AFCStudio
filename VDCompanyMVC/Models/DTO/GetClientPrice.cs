@@ -9,11 +9,14 @@ namespace AFCStudio.Models.DTO
     public class GetClientPrice
     {
         [JsonConstructor]
-        public GetClientPrice(int id, decimal price)
+        public GetClientPrice(int id, decimal price , string name)
         {
             Id = id;
             Price = price;
+            Name = name;
         }
+        [JsonProperty("name")]
+        public string Name { get; set; }
         [JsonProperty("id")]
         public int Id { get; set; }
 
