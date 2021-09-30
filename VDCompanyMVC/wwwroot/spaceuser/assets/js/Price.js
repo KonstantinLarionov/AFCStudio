@@ -1,6 +1,6 @@
 ﻿var table = document.querySelector('table');
 var servicearr = [];
-var filtred = [];
+var filtered  = [];
 
 
 table.addEventListener('click', function (e) {
@@ -26,9 +26,10 @@ function AddService(id_op, price, name) {
             servicearr.push(service);
         }
     }
+   
     
     
-    var filtered = servicearr.filter(function (el) {
+     filtered = servicearr.filter(function (el) {
         return el != null;
     });
     for (var i in filtered) {
@@ -49,34 +50,31 @@ function AddService(id_op, price, name) {
                 '<td>' + filtered[i].price + '</td>';
            
        }
-       tbody.appendChild(tr);
+        tbody.appendChild(tr);
+        console.log(filtered);
     })
     $("#buttonhidden").click(function (event) {
         $("#text").text("Для оплаты введите данные ниже реквезиты и нажмите кнопку я оплатил  ");
         $("#buttonpayready").css("visibility", "visible");
     })
     
+    
 }
-
+console.log(filtered);
 function CreateService() {
-    var filtered_ = servicearr.filter(function (el) {
-        return el != null;
-    });
+    console.log(filtered);
             $.ajax({
-            url: '/User/CreateService',
-            method: 'post',
-            data: { filtered: filtered },
-            success: function (data) {
-                var a = JSON.parse(data);
-                if (a.status == "not_authorized") { // слетела сессия, обновим страничку - выкинет на авторизацию
-                    window.location.reload();
-                    return;
-                }
-                if (a.status == "success") {
-                    location.reload();
-                }
+                url: '/User/CreateService',
+                method: 'post',
+                dataType: 'json',
+                data: filtered,
+                  success: function (data) {
+                      var a = JSON.parse(data);
+                      console.log(data);
+               
+                
             },
         });
-        alert("Готово");
+    
 }
 
