@@ -7,17 +7,17 @@ table.addEventListener('click', function (e) {
     e.target.classList.toggle('highlite')
 })
 
-function AddService(id_op, price, name) {
+function AddService(id_op, Price, Name) {
     
-    let service = { id: id_op, price: price, name: name };
+    let service = { id: id_op, Price: Price, Name: Name };
     var check = 1;
-    var priceall = 0;
+    var Priceall = 0;
     if (servicearr.length == 0 ||( servicearr[0] == undefined && servicearr.length == 1)) {
         servicearr.push(service);
     }
     else {
         for (var i in servicearr) {
-            if (servicearr[i].price == service.price) {
+            if (servicearr[i].Price == service.Price) {
                 delete servicearr[i];
                 check = 0;
             }
@@ -29,52 +29,60 @@ function AddService(id_op, price, name) {
    
     
     
-     filtered = servicearr.filter(function (el) {
+   filtered = servicearr.filter(function (el) {
         return el != null;
     });
     for (var i in filtered) {
-        priceall += filtered[i].price;
+        Priceall += filtered[i].Price;
     }
    document.querySelector('#price').innerHTML = '';
-    document.querySelector('#price').innerHTML = "Итого к оплате:   "  + priceall;
-    $("#click_button").click(function (event) {
+    document.querySelector('#price').innerHTML = "Итого к оплате:   " + Priceall;
+
+    
+
+   
         $("#buttonhidden").css("visibility", "visible");
+        $("#buttonpayready").css("visibility", "visible");
         $("#table").css("visibility", "visible");
         $("#price").css("visibility", "visible");
-     var tbody = document.getElementById('table');
+        var tbody = document.getElementById('table');
 
         for (var i = 0; i < filtered.length; i++) {
             var tr = document.createElement('tr');
             tr.innerHTML =
-                '<td>' + filtered[i].name + '</td>' +
-                '<td>' + filtered[i].price + '</td>';
-           
-       }
+                '<td>' + filtered[i].Name + '</td>' +
+                '<td>' + filtered[i].Price + '</td>';
+
+        }
         tbody.appendChild(tr);
-        console.log(filtered);
-    })
+
+
+    
     $("#buttonhidden").click(function (event) {
         $("#text").text("Для оплаты введите данные ниже реквезиты и нажмите кнопку я оплатил  ");
         $("#buttonpayready").css("visibility", "visible");
     })
-    
-    
+  
 }
-console.log(filtered);
+ 
+
 function CreateService() {
-    console.log(filtered);
-            $.ajax({
-                url: '/User/CreateService',
-                method: 'post',
-                dataType: 'json',
-                data: filtered,
-                  success: function (data) {
-                      var a = JSON.parse(data);
-                      console.log(data);
-               
-                
-            },
-        });
+    $.ajax({
+        url: '/User/CreateService',
+        method: 'post',
+        dataType: 'json',
+        data: { filtered: filtered },
+        success: function (data) {
+            var a = JSON.parse(data);
+            if (a.info === "success") {
+                alert("Ваши данные успешно добавлены ");
+
+            }
+            else if (a.info === "error"){
+                alert("Ваши данные не были добавлены обратитесь в службу поддержки  ");
+            }
+        },
+    });
     
 }
 

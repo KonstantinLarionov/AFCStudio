@@ -19,6 +19,7 @@ using AFCStudio.Models.Helpers;
 using AFCStudio.Models.Objects;
 using AFCStudio.Models.DTO;
 
+
 namespace VDCompany.Controllers
 {
     public class UserController : Controller
@@ -416,9 +417,21 @@ namespace VDCompany.Controllers
             if (!Auth())
                 return JsonAnswer.U_Unauthorized();
 
+            var user = db.Users.Where(f => f.Login == userinfo.login && f.Password == userinfo.password)
+                .Include(x => x.GetClientPrice)
+                .FirstOrDefault();
 
+            filtered.ForEach(x=> 
+            {
+                x.Id = 0;
+                user.GetClientPrice.Add(x);
+            });
 
-            return "";
+            var res = db.SaveChanges();
+
+            //ViewData["notify"] = res > 0 ? JsonAnswer.U_Success_Add() : JsonAnswer.U_Error_Add();
+
+            return res > 0 ? JsonAnswer.U_Success() : JsonAnswer.U_Error();
         }
 
         #region Helpers

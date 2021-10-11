@@ -121,7 +121,7 @@ namespace VDCompany.Controllers
                 curruser = db.Admins.Where(f => f.Login == login && f.Password == password);
                 return db.Admins.Any(f => f.Email == login && f.Password == password);
             }
-            catch(Exception E)
+            catch(Exception)
             {
                 return false;
             }

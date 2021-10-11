@@ -94,6 +94,10 @@ namespace VDCompany.Controllers
         {
             return "{\"info\":\"success\"}";
         }
+
+        public static string U_Success_Add() => "Ваши данные успешно добавлены!";
+        public static string U_Error_Add() => "Ваши данные не добавлены! Обратитесь в службу поддержки.";
+
         #endregion
 
         #region HomeControllers

@@ -34,6 +34,7 @@ namespace VDCompanyMVC.Models.Entitys
         {
             optionsBuilder.UseMySql(Conf.ConnectDb);
             base.OnConfiguring(optionsBuilder);
+           
         }
     }
 }
