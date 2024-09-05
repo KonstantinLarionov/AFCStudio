@@ -70,11 +70,6 @@
 					<h4 class="card-text">Подсчитать услугу</h4>
 				</a>
 			</div>
-			@*<div class="card3">
-					<a class="card-text" href="/User/Login">
-						<h4 class="card-text">Зарегистрироваться и отслеживать процесс</h4>
-					</a>
-				</div>*@
 		</div>
 	</section>
 	<!--secondhad-end-->
@@ -409,13 +404,6 @@
 						<h3><i class="fa fa-clock-o"></i>График:</h3>
 						<span><strong>Понедельник - Воскресенье:</strong> 9:00 - 18:00<br><br><strong>Суббота - Воскресенье:</strong> Да, в выходные тоже идет работа.</span>
 					</div>
-					<!--<ul class="social-link">-->
-					<!--<li class="twitter"><a href="#"><i class="fa fa-twitter"></i></a></li>-->
-					<!--<li class="facebook"><a href="#"><i class="fa fa-facebook"></i></a></li>-->
-					<!--<li class="pinterest"><a href="#"><i class="fa fa-pinterest"></i></a></li>-->
-					<!--<li class="gplus"><a href="#"><i class="fa fa-google-plus"></i></a></li>-->
-					<!--<li class="dribbble"><a href="#"><i class="fa fa-dribbble"></i></a></li>-->
-					<!--</ul>-->
 				</div>
 				<div class="col-lg-6 col-sm-5 wow fadeInUp delay-05s">
 					<div class="form">
@@ -513,15 +501,6 @@
 
 	<script type="text/javascript">
 		$(window).load(function () {
-			//Timeout(function () {
-			//    let roll = (document.getElementById('sec').innerHTML == 0) ? true : false;
-			//    if (roll == false) {
-			//        document.querySelector("#sec").scrollIntoView({
-			//            behavior: 'smooth',
-			//            block: 'start'
-			//        }, 3000);}
-			//
-
 			let roll = (0 == pageYOffset) ? false : true;
 			if (roll == false) {
 				setTimeout(function () {
@@ -537,12 +516,7 @@
 				$('html, body').stop().animate({
 					scrollTop: $($anchor.attr('href')).offset().top - 102
 				}, 1500, 'easeInOutExpo');
-				/*
-				if you don't want to use the easing effects:
-				$('html, body').stop().animate({
-					scrollTop: $($anchor.attr('href')).offset().top
-				}, 1000);
-				*/
+
 				if ($(window).width() < 768) {
 					$('.main-nav').hide();
 				}
