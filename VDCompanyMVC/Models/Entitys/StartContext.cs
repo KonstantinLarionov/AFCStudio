@@ -27,7 +27,7 @@ namespace VDCompanyMVC.Models.Entitys
 
         public StartContext(DbContextOptions options) : base(options)
         {
-            Database.EnsureCreated();
+            //Database.EnsureCreated();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
