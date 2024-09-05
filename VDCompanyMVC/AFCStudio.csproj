@@ -6,14 +6,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Logs\**" />
     <Compile Remove="wwwroot\spacehome\assets\images\Новая папка\**" />
     <Compile Remove="wwwroot\spaceuser\assets\js\Новая папка\**" />
     <Compile Remove="wwwroot\Новая папка1\**" />
     <Compile Remove="wwwroot\Новая папка\**" />
+    <Content Remove="Logs\**" />
     <Content Remove="wwwroot\spacehome\assets\images\Новая папка\**" />
     <Content Remove="wwwroot\spaceuser\assets\js\Новая папка\**" />
     <Content Remove="wwwroot\Новая папка1\**" />
     <Content Remove="wwwroot\Новая папка\**" />
+    <EmbeddedResource Remove="Logs\**" />
     <EmbeddedResource Remove="wwwroot\spacehome\assets\images\Новая папка\**" />
     <EmbeddedResource Remove="wwwroot\spaceuser\assets\js\Новая папка\**" />
     <EmbeddedResource Remove="wwwroot\Новая папка1\**" />
@@ -21,6 +24,7 @@
     <EntityDeploy Remove="wwwroot\spacehome\assets\images\Новая папка\**" />
     <EntityDeploy Remove="wwwroot\Новая папка1\**" />
     <EntityDeploy Remove="wwwroot\Новая папка\**" />
+    <None Remove="Logs\**" />
     <None Remove="wwwroot\spacehome\assets\images\Новая папка\**" />
     <None Remove="wwwroot\spaceuser\assets\js\Новая папка\**" />
     <None Remove="wwwroot\Новая папка1\**" />
@@ -39,6 +43,7 @@
 
   <ItemGroup>
     <PackageReference Include="EntityFramework" Version="6.4.4" />
+    <PackageReference Include="LigerShark.WebOptimizer.Core" Version="1.0.236" />
     <PackageReference Include="MailKit" Version="2.6.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="5.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.5">
@@ -51,9 +56,7 @@
 
 
   <ItemGroup>
-    <Folder Include="Logs\" />
-    <Folder Include="wwwroot\reports\" />
-    <Folder Include="wwwroot\received_files\" />
+    <Folder Include="Controllers\" />
   </ItemGroup>
 
 </Project>
