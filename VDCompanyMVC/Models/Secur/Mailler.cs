@@ -12,7 +12,7 @@ namespace VDCompanyMVC.Models.Secur
         static public async Task SendEmailAsync(string email, string from, string subject, string message)
         {
             var emailMessage = new MimeMessage();
-            emailMessage.From.Add(new MailboxAddress(from, "companyvd@yandex.ru"));
+            emailMessage.From.Add(new MailboxAddress(from, "afc.studio@yandex.ru"));
             emailMessage.To.Add(new MailboxAddress("", email));
             emailMessage.Subject = subject;
             emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html)
@@ -23,7 +23,7 @@ namespace VDCompanyMVC.Models.Secur
             {
                 //client.ServerCertificateValidationCallback = (s, c, h, e) => true;
                 await client.ConnectAsync("smtp.yandex.ru", 587, false);
-                await client.AuthenticateAsync("companyvd@yandex.ru", "4Thehorde!!!!");
+                await client.AuthenticateAsync("afc.studio@yandex.ru", "lollipop321123");
                 await client.SendAsync(emailMessage);
                 await client.DisconnectAsync(true);
             }

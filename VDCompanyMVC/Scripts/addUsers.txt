@@ -1,0 +1,17 @@
+﻿//Добавление менеджера
+INSERT INTO `afcstand`.`lawyers` 
+(`Login`, `FIO`, `Password`, `Phone`, `Email`, `About`, `Speciality`, `PersonalCode`, `DateCreate`) 
+VALUES 
+('testM', 'testM', 'testM', '8', 'afc.studio@yandex.ru', 'testM', 'testM', 'testM', '2020-12-12 00:00:00');
+
+//Добавление пользователя
+INSERT INTO `afcstand`.`users` 
+(`Login`, `Name`, `Number`, `RefCode`, `FromeRef`, `Email`, `LASTLOGIN`, `DateReg`, `Password`) 
+VALUES 
+('testU', 'testU', '0', '0', '0', 'testU', '2020-12-12 00:00:00.000000', '2020-12-12 00:00:00.000000', 'testU');
+
+//Добавление админа
+INSERT INTO `afcstand`.`admins` 
+(`Login`, `Password`, `Phone`, `Email`, `FIO`, `About`, `HASHPRVT`)
+VALUES 
+('testA', 'testA', '9', 'testA', 'testA', 'testA', 'a');
