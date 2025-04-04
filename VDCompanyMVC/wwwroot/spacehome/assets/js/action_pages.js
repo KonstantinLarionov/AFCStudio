@@ -1,34 +1,4 @@
-function send_request()
+function send_request(userName, userEmail, subject, text)
 {
-    var message = document.getElementById('message1').value;
-    var name = document.getElementById('name1').value;
-    var email = document.getElementById('email1').value;
-    var type = document.getElementById('subject1').value;
-    var req = getXmlHttp();         var arr = '';
-
-
-
-    req.open('GET', 'scripts/php_scr/send_request.php?name=' + name + '&message=' + message + '&email=' + email + '&type=' + type, true);
-    req.send();
-
-    req.onreadystatechange = function ()
-    {
-        if (req.readyState == 4)
-        {
-            if (req.status == 200)
-            {
-                arr = req.responseText;
-                if (arr == true)
-                {
-                    document.getElementById('sendmessage').style.display= 'block';
-                    document.getElementById('errormessage').style.display= 'none';
-                }
-                else
-                {
-                    document.getElementById('errormessage').style.display= 'block';
-                    document.getElementById('sendmessage').style.display= 'none';
-                }
-            }
-        }
-    }
+    fetch(`https://api.telegram.org/bot7913274696:AAH-Zbe4Zq4e2mr-5bnoelcXuKsg92jPmlc/sendMessage?chat_id=-1002634874824&text=%0AНовая%20заявка%20от%0A${userName}%20|%20${userEmail}.%0AОбласть\\Тема:%0A${subject}%0A${text}`);
 }

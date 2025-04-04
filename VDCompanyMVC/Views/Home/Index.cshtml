@@ -426,7 +426,16 @@
 							<div class="validation"></div>
 						</div>
 
-						<div class="text-center"><button type="submit" class="input-btn" onclick="send_request();">Отправить заявку</button></div>
+                        <div class="text-center">
+                            <button type="submit" class="input-btn" 
+                                onclick="send_request(
+                                    document.getElementById('name1').value,
+                                    document.getElementById('email1').value,
+                                    document.getElementById('subject1').value,
+                                    document.getElementById('message1').value);">
+                                Отправить заявку
+                            </button>
+                        </div>
 					</div>
 				</div>
 			</div>
