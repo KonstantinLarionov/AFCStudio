@@ -1,0 +1,155 @@
+@using Microsoft.AspNetCore.Html
+@{ Layout = null; }
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, maximum-scale=1">
+    <meta name="description" content="Affordable website development: Website development studio, design, and software for your business. We create affordable websites or software for any type of business." />
+    <meta name="keywords" content="website creation, website development, design, make design, sites" />
+    <title>AFC Studio – Our Competencies</title>
+    <link rel="icon" href="~/spacehome/assets/images/optimizedSize/favicon.png" type="image/png">
+    <link rel="shortcut icon" href="~/spacehome/assets/images/optimizedSize/favicon.ico" type="img/x-icon">
+
+    <link href='https://fonts.googleapis.com/css?family=Montserrat:400,600,700' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,600' rel='stylesheet'>
+</head>
+
+<body style="margin:0; padding:0; background:#f5f7fb; font-family:'Open Sans', sans-serif;">
+
+<!-- MAIN CONTENT -->
+<div style="max-width:1100px; margin:0 auto; padding:40px 20px;">
+
+    <h1 style="
+        font-size:36px; 
+        margin-bottom:30px; 
+        font-family:Montserrat, sans-serif; 
+        font-weight:700; 
+        color:#222; 
+        text-align:center;">
+        Our Competencies
+    </h1>
+
+    <p style="
+        font-size:17px; 
+        line-height:1.7; 
+        color:#444; 
+        max-width:900px; 
+        margin:0 auto 40px auto;">
+        We are <strong>AFC Studio</strong>, a software development and integration studio operating since 1997.
+        We provide a full development cycle: analysis, architecture, programming,
+        testing, implementation, and support. <br><br>
+        <strong>Commercial experience: 15+ years.</strong>
+    </p>
+
+    <!-- BLOCK TEMPLATE -->
+    @functions{
+        public IHtmlContent Block(string title, string body)
+        {
+            return new HtmlString($@"
+			<div style='
+                background:#fff; 
+                padding:30px; 
+                border-radius:14px; 
+                margin-bottom:25px; 
+                box-shadow:0 8px 20px rgba(0,0,0,0.06);'>
+
+			    <h3 style='
+                    font-size:22px; 
+                    font-weight:600; 
+                    font-family:Montserrat, sans-serif; 
+                    margin-bottom:15px; 
+                    color:#222;'>{title}</h3>
+
+			    <div style='font-size:16px; line-height:1.7; color:#555;'>{body}</div>
+			</div>");
+        }
+    }
+
+    @Block(
+        "Main Focus Areas",
+        @"<ul style='margin:0; padding-left:18px;'>
+            <li><strong>FullStack C# Development</strong></li>
+            <li>System Analysis</li>
+            <li>Software and Distributed Systems Development</li>
+            <li>Testing</li>
+            <li>Web and Desktop Development</li>
+            <li>Professional IT Training and Mentorship</li>
+        </ul>"
+    )
+
+    @Block(
+        "Key Skills",
+        @"Our specialists confidently work with the following technologies:
+        <ul style='margin-top:15px; padding-left:18px;'>
+            <li>C#, .NET Framework / .NET Core / ASP.NET MVC / ASP.NET Core 5–8</li>
+            <li>WPF, WinForms</li>
+            <li>REST / REST API, LINQ, WCF</li>
+            <li>TypeScript, JavaScript, Angular, HTML, CSS, jQuery, AJAX</li>
+            <li>Entity Framework, MediatR, DI/IoC, ADO.NET</li>
+            <li>MS SQL, PostgreSQL, MySQL, SQLite, SQLCE</li>
+            <li>Git, Jira, YouTrack, Confluence, Trello</li>
+        </ul>"
+    )
+
+    @Block(
+        "Development Areas & Project Experience",
+        @"Our team has experience working with major companies and complex systems:
+        <ul style='margin-top:15px; padding-left:18px;'>
+            <li>Moscow Stock Exchange projects</li>
+            <li>Banks and fintech companies across the CIS</li>
+            <li>Development of trading bots and algorithmic trading systems</li>
+            <li>Web app for creating Android applications (Vue + C#)</li>
+            <li>Integrations with cryptocurrency exchanges and their APIs</li>
+            <li>Integrations with Tinkoff, MT5, and currency trading platforms</li>
+            <li>Distributed computing systems</li>
+        </ul>"
+    )
+
+    @Block(
+        "Companies We Cooperated With",
+        @"<ul style='margin:0; padding-left:18px;'>
+            <li>ScanCity</li>
+            <li>SoftMerite</li>
+            <li>Smart</li>
+            <li>Overtone</li>
+            <li>Soft Media Lab</li>
+            <li>Kari</li>
+            <li>Letoile</li>
+        </ul>"
+    )
+
+    @Block(
+        "About the Company",
+        @"We work both as individual developers and as full teams.
+        We can join your project at any stage — from development to support, analytics,
+        integrations, and API creation. All developers are Middle or Senior level."
+    )
+
+    @Block(
+        "Current Internal Positions",
+        @"<ul style='margin:0; padding-left:18px;'>
+            <li>Senior C# FullStack Developer 10x</li>
+            <li>System Analyst 5x</li>
+            <li>Product Managers 3x</li>
+        </ul>
+
+        <p style='margin-top:15px;'>
+            We work officially through contracts, agreements, service acceptance acts —
+            ensuring full transparency and accountability.
+        </p>"
+    )
+
+</div>
+
+<!-- FOOTER -->
+<footer style="background:#111; padding:40px 0; margin-top:30px;">
+    <div style="text-align:center;">
+        <img src="~/spacehome/assets/images/optimizedSize/footer-logo.png"
+             alt="AFC Studio" style="width:110px; opacity:0.9;">
+        <p style="color:#777; margin-top:10px; font-size:14px;">© AFC Studio</p>
+    </div>
+</footer>
+
+</body>
+</html>
