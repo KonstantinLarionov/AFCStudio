@@ -1,11 +1,11 @@
 #!/bin/bash
 
-if ! [ -x "$(command -v docker compose)" ]; then
+if ! docker compose version > /dev/null 2>&1; then
   echo 'Error: docker compose is not installed.' >&2
   exit 1
 fi
 
-domains=(afcstudio.ru www.afcstudio.ru)
+domains=(afcstudio.asia www.afcstudio.asia)
 rsa_key_size=4096
 data_path="./certbot"
 email="afc.studio@yandex.ru" # Adding a valid address is strongly recommended
