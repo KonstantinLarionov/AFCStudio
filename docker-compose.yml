@@ -8,8 +8,15 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://+:8080
+      - Privacy__OperatorName
+      - Privacy__OperatorAddress
+      - Privacy__OperatorRequisites
+      - Privacy__ConsentVersion
+      - Feedback__Directory=/var/lib/afcstudio/feedback
     expose:
       - "8080"
+    volumes:
+      - ${AFCSTUDIO_FEEDBACK_DIR:-./data/feedback}:/var/lib/afcstudio/feedback
 
   nginx:
     image: nginx:latest

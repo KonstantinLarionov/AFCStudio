@@ -1,30 +1,61 @@
-﻿using AFCStudio.Models.Helpers;
+using System;
+using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
-
-using VDCompany.Controllers;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using VDCompanyMVC.Models;
 
 namespace VDCompanyMVC.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly ILogger<HomeController> _logger;
+        private readonly PrivacyOperator _operator;
+        private readonly FeedbackJournal _journal;
+
+        public HomeController(IConfiguration configuration, ILogger<HomeController> logger, FeedbackJournal journal)
+        {
+            _logger = logger;
+            _operator = new PrivacyOperator(configuration);
+            _journal = journal;
+        }
 
         public IActionResult Index()
         {
-            return View();
+            ViewData["CanReceiveFeedback"] = _operator.HasConsentDocument && _journal.IsConfigured;
+            return View(_operator);
         }
+
+        [HttpGet("/privacy", Name = "PrivacyPolicy")]
+        [HttpGet("/Home/PDN")]
+        public IActionResult PDN() => View(_operator);
+
+        [HttpGet("/consent", Name = "FeedbackConsent")]
+        public IActionResult Consent() => View(_operator);
+
         [HttpPost]
-        public string SendFeedBack( string name, string email, string message )
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SendFeedBack(FeedbackRequest request)
         {
+            if (!_operator.HasConsentDocument || !_journal.IsConfigured)
+                return StatusCode(503, new { message = "Форма временно недоступна." });
+
+            if (!request.ConsentAccepted || request.ConsentVersion != _operator.ConsentVersion)
+                return BadRequest(new { message = "Откройте актуальный текст согласия и подтвердите его. При необходимости обновите страницу." });
+
+            if (!ModelState.IsValid)
+                return BadRequest(new { message = "Проверьте имя, адрес электронной почты, тему и текст заявки." });
+
             try
             {
-                string content = "<p><font size = \"3\" face = \"Source Serif Pro\">Новое сообщение через обратную связь <br> <strong>Имя:</strong> " + name + " <br> <strong>Обратный Email:</strong> " + email + " <br> <strong>Сообщение:</strong><br> " + message + " </font></p>";
-                Letters.Send( "afc.studio@yandex.ru", "Обратная связь.", content ).GetAwaiter().GetResult();
-                return JsonAnswer.H_Success();
+                var id = await _journal.RecordAsync(request, _operator.ConsentVersion);
+                return Ok(new { id });
             }
-            catch
+            catch (Exception exception)
             {
-                return JsonAnswer.H_Error();
+                _logger.LogError("Не удалось записать заявку и согласие ({ErrorType}).", exception.GetType().Name);
+                return StatusCode(503, new { message = "Не удалось отправить заявку. Попробуйте ещё раз позже." });
             }
         }
     }

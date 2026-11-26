@@ -124,6 +124,7 @@ namespace VDCompanyMVC
         public void ConfigureServices( IServiceCollection services )
         {
             services.AddControllersWithViews();
+            services.AddSingleton<Models.FeedbackJournal>();
             services.AddSignalR();
             services.AddDistributedMemoryCache();
             services.AddHttpContextAccessor();

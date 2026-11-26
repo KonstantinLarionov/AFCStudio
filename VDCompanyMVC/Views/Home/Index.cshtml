@@ -1,6 +1,9 @@
-﻿@{ Layout = null; }
+@model VDCompanyMVC.Models.PrivacyOperator
+@addTagHelper Microsoft.AspNetCore.Mvc.TagHelpers.ScriptTagHelper, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper, Microsoft.AspNetCore.Mvc.TagHelpers
+@{ Layout = null; }
 <!doctype html>
-<html>
+<html lang="ru">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, maximum-scale=1">
@@ -17,7 +20,7 @@
 	<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,800italic,700italic,600italic,400italic,300italic,800,700,600' rel='stylesheet' type='text/css'>
 	@*Основная вёрстка*@
 	<link href="~/spacehome/assets/css/bootstrap/bootstrap.css" rel="stylesheet" type="text/css">
-	<link href="~/spacehome/assets/css/style.css" rel="stylesheet" type="text/css">
+	<link href="~/spacehome/assets/css/style.css" rel="stylesheet" type="text/css" asp-append-version="true">
 	@*Загружает значки*@
 	<link href="~/spacehome/assets/css/font-awesome.css" rel="stylesheet" type="text/css">
 	<link href="~/spacehome/assets/css/responsive.css" rel="stylesheet" type="text/css">
@@ -33,9 +36,8 @@
 	<script type="text/javascript" src="~/spacehome/assets/js/wow.js"></script>
 	<script type="text/javascript" src="~/spacehome/assets/js/classie.js"></script>
 	<script type="text/javascript" src="~/spacehome/assets/js/magnific-popup.js"></script>
-	<script src="scripts/js_scr/contactform/contactform.js"></script>
-	<script src="~/spacehome/assets/js/request.js"></script>
-	<script src="~/spacehome/assets/js/action_pages.js"></script>
+	<script src="~/spacehome/assets/js/action_pages.js" asp-append-version="true" defer></script>
+	<script src="~/spacehome/assets/js/feedback.js" asp-append-version="true" defer></script>
 </head>
 
 <body>
@@ -394,7 +396,15 @@
 				<div class="col-lg-6 col-sm-7 wow fadeInLeft">
 					<div class="contact-info-box address clearfix">
 						<h3><i class=" icon-map-marker"></i>Адрес:</h3>
-						<span>г.Оренбург</span>
+						<span>@(Model.IsIdentified ? Model.Address : "г. Оренбург")</span>
+						@if (Model.IsIdentified)
+						{
+							<p>@Model.Name</p>
+							@if (!string.IsNullOrWhiteSpace(Model.Requisites))
+							{
+								<p>@Model.Requisites</p>
+							}
+						}
 					</div>
 					<div class="contact-info-box email clearfix">
 						<h3><i class="fa fa-pencil"></i>email:</h3>
@@ -406,37 +416,46 @@
 					</div>
 				</div>
 				<div class="col-lg-6 col-sm-5 wow fadeInUp delay-05s">
-					<div class="form">
-						<div id="sendmessage">Ваша заявка оформлена и отправлена! Спасибо!</div>
-						<div id="errormessage">Что то пошло не так.. Проверьте поля ввода!</div>
-						<div class="form-group">
-							<input type="text" name="name" class="form-control input-text" id="name1" placeholder="Ваше имя" data-rule="minlen:4" data-msg="Please enter at least 4 chars" />
-							<div class="validation"></div>
-						</div>
-						<div class="form-group">
-							<input type="email" class="form-control input-text" name="email" id="email1" placeholder="Ваш Email" data-rule="email" data-msg="Please enter a valid email" />
-							<div class="validation"></div>
-						</div>
-						<div class="form-group">
-							<input type="text" class="form-control input-text" name="subject" id="subject1" placeholder="Вид заказа (Программа, база данных, сайт)" data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject" />
-							<div class="validation"></div>
-						</div>
-						<div class="form-group">
-							<textarea class="form-control input-text text-area" name="message" id="message1" rows="5" data-rule="required" data-msg="Please write something for us" placeholder="Опишите вкратце что бы вы хотели заказать и/или оставь ваш телефон, мы перезвоним вам через 5 минут!"></textarea>
-							<div class="validation"></div>
-						</div>
+					@if (ViewData["CanReceiveFeedback"] is true)
+					{
+						<form class="form" id="feedback-form" action="@Url.Action("SendFeedBack", "Home")" method="post">
+							@Html.AntiForgeryToken()
+							<div class="form-group">
+								<label for="name1">Ваше имя</label>
+								<input type="text" name="Name" class="form-control input-text" id="name1" required maxlength="150" autocomplete="name">
+							</div>
+							<div class="form-group">
+								<label for="email1">Ваш email</label>
+								<input type="email" name="Email" class="form-control input-text" id="email1" required maxlength="254" autocomplete="email">
+							</div>
+							<div class="form-group">
+								<label for="subject1">Тема заявки</label>
+								<input type="text" name="Subject" class="form-control input-text" id="subject1" required maxlength="200">
+							</div>
+							<div class="form-group">
+								<label for="message1">Описание заказа</label>
+								<textarea class="form-control input-text text-area" name="Message" id="message1" rows="5" required maxlength="3000"></textarea>
+							</div>
 
-                        <div class="text-center">
-                            <button type="submit" class="input-btn" 
-                                onclick="send_request(
-                                    document.getElementById('name1').value,
-                                    document.getElementById('email1').value,
-                                    document.getElementById('subject1').value,
-                                    document.getElementById('message1').value);">
-                                Отправить заявку
-                            </button>
-                        </div>
-					</div>
+							<input type="hidden" name="ConsentVersion" value="@Model.ConsentVersion">
+							<p>
+								<label for="feedback-consent">
+									<input type="checkbox" name="ConsentAccepted" id="feedback-consent" value="true" required>
+									Даю согласие на обработку моих персональных данных для ответа на заявку.
+								</label>
+								<a href="@Url.RouteUrl("FeedbackConsent")" target="_blank" rel="noopener">Текст согласия</a>
+							</p>
+							<div class="text-center">
+								<button type="submit" class="input-btn">Отправить заявку</button>
+							</div>
+							<p id="feedback-status" class="feedback-status" role="status" aria-atomic="true"></p>
+						</form>
+					}
+					else
+					{
+						<p>Форма заявки временно недоступна.</p>
+					}
+					<p><a href="@Url.RouteUrl("PrivacyPolicy")">Политика обработки персональных данных</a></p>
 				</div>
 			</div>
 		</section>
@@ -444,7 +463,7 @@
 	<footer class="footer">
 		<div class="container">
 			<div class="footer-logo"><a href="#"><img src="~/spacehome/assets/images/optimizedSize/footer-logo.png" alt="" loading="lazy"></a></div>
-			<span class="copyright"></span>
+			<p><a href="@Url.RouteUrl("PrivacyPolicy")" style="color: white">Политика обработки персональных данных</a></p>
 			<div class="credits">
 				<!--
 				  All the links in the footer should remain intact.
